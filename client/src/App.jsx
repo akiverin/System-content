@@ -8,7 +8,9 @@ function App() {
     <>
       <main>
         <Sidebar />
-        <AppRoutes />
+        <div className="content">
+          <AppRoutes />
+        </div>
       </main>
     </>
   );
