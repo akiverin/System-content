@@ -1,12 +1,13 @@
 import React from "react";
 import AppRoutes from "./routes/AppRoutes";
 import "./App.scss";
+import Sidebar from "@/components/Sidebar/";
 
 function App() {
   return (
     <>
-      <Sidebar />
       <main>
+        <Sidebar />
         <AppRoutes />
       </main>
     </>
