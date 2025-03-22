@@ -47,3 +47,27 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Неверный текущий пароль" });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Пароль успешно изменён" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

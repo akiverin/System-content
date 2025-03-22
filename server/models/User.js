@@ -6,12 +6,13 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  image: { type: String, default: "/public/profileImage.svg" },
   role: {
     type: String,
     enum: ["student", "teacher", "admin"],
     default: "student",
   },
-  group: { type: String },
+  groupId: { type: Number },
 });
 
 UserSchema.pre("save", async function (next) {
