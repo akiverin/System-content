@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, register } from "@/redux/actions/authActions";
 import "./Auth.scss";
 import Button from "@components/Button/";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
   const { loading, error, userInfo } = authState;
+  const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(true);
 
@@ -24,10 +26,11 @@ const Auth = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isLogin) {
-      dispatch(login(formData.email, formData.password));
+      await dispatch(login(formData.email, formData.password));
+      navigate("/");
     } else {
       dispatch(
         register(

@@ -1,0 +1,106 @@
+@use "@styles/variables" as v;
+
+.profile {
+  &__wrapper {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  &__title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: v.$auth-color;
+  }
+
+  &__loading,
+  &__error {
+    font-size: 1.2rem;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  &__error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border-radius: 4px;
+  }
+
+  &__image-container {
+    text-align: center;
+    margin-bottom: 1.3rem;
+  }
+
+  &__image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid v.$auth-bg;
+  }
+
+  &__info {
+    background: v.$auth-bg;
+    padding: 1.2rem;
+    border-radius: 16px;
+    box-shadow: v.$shadow;
+  }
+
+  &__field {
+    display: flex;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+
+  &__label {
+    flex: 0 0 120px;
+    font-weight: bold;
+    color: black;
+  }
+
+  &__value {
+    flex: 1;
+    color: #3a3c3e;
+  }
+
+  &__edit-button {
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  &__edit-form {
+    background: white;
+    padding: 0.4rem;
+    border-radius: 8px;
+  }
+
+  &__form-group {
+    margin-bottom: 1rem;
+  }
+
+  &__form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  &__form-input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  &__form-file {
+    margin-top: 0.5rem;
+  }
+
+  &__form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+}

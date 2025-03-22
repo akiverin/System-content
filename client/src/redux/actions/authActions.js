@@ -7,6 +7,7 @@ export const LOGIN_FAIL = "LOGIN_FAIL";
 export const REGISTER_REQUEST = "REGISTER_REQUEST";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
+export const LOGOUT = "LOGOUT";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -18,6 +19,7 @@ export const login = (email, password) => async (dispatch) => {
       config
     );
     dispatch({ type: LOGIN_SUCCESS, payload: data });
+    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: LOGIN_FAIL,
@@ -50,3 +52,8 @@ export const register =
       });
     }
   };
+
+export const logout = () => (dispatch) => {
+  localStorage.removeItem("userInfo");
+  dispatch({ type: LOGOUT });
+};
