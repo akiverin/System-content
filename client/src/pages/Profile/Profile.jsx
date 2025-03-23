@@ -1,4 +1,3 @@
-// src/pages/Profile.jsx
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "@/redux/actions/userActions";
@@ -9,6 +8,7 @@ import "./Profile.scss";
 import { patchUser } from "../../redux/actions/userActions";
 
 const Profile = () => {
+  const API_BASE_URL = "http://localhost:5050";
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const { user: profile, loading, error } = useSelector((state) => state.user);
@@ -18,13 +18,14 @@ const Profile = () => {
     lastName: "",
     email: "",
     group: "",
-    avatar: null,
+    image: null,
   });
 
   useEffect(() => {
     if (auth.user?.userId) {
       dispatch(getUser(auth.user.userId));
     }
+    console.log(profile);
   }, [auth.user, dispatch]);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const Profile = () => {
         lastName: profile.lastName,
         email: profile.email,
         group: profile.group,
-        avatar: profile.avatar,
+        image: profile.image,
       });
     }
   }, [profile]);
@@ -45,14 +46,35 @@ const Profile = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, avatar: e.target.files[0] }));
+    setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(auth.user.userId, ...Object.values(formData));
-    dispatch(patchUser(auth.user.userId, ...Object.values(formData)));
-    setEditMode(false);
+
+    const userData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      group: formData.group,
+    };
+
+    try {
+      await dispatch(patchUser(profile._id, userData, formData.image));
+      setEditMode(false);
+    } catch (error) {
+      console.error("Ошибка обновления:", error);
+    }
+  };
+
+  const getAvatarUrl = () => {
+    if (formData.preview) return formData.preview;
+    if (profile?.image) {
+      return profile.image.startsWith("http")
+        ? profile.image
+        : `${API_BASE_URL}/${profile.image}`;
+    }
+    return defaultAvatar;
   };
 
   return (
@@ -67,9 +89,12 @@ const Profile = () => {
           <>
             <div className="profile__image-container">
               <img
-                src={profile.avatar || defaultAvatar}
+                src={getAvatarUrl()}
                 alt="Аватар"
                 className="profile__image"
+                onError={(e) => {
+                  e.target.src = defaultAvatar;
+                }}
               />
             </div>
 

@@ -1,4 +1,3 @@
-// src/redux/reducers/userReducer.js
 import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
@@ -33,7 +32,16 @@ export const userReducer = (state = initialState, action) => {
     case GET_ALL_USERS_SUCCESS:
       return { ...state, loading: false, allUsers: action.payload };
     case PATCH_USER_SUCCESS:
-      return { ...state, loading: false, user: action.payload };
+      return {
+        ...state,
+        loading: false,
+        user: {
+          ...state.user,
+          ...action.payload,
+          image: action.payload.image || state.user.image,
+        },
+        error: null,
+      };
     case DELETE_USER_SUCCESS:
       return { ...state, loading: false, user: {} };
     case GET_USER_FAIL:

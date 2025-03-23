@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const path = require("path");
+const fs = require("fs");
 
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -11,13 +13,38 @@ const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+const isProduction = process.env.NODE_ENV === "production";
+const localClient = "http://localhost:5173";
+const productionClient = "https://syscontent.kiver.net";
+const serverUrls = [isProduction ? productionClient : "http://localhost:5050"];
+
+app.use(
+  cors({
+    origin: isProduction ? productionClient : localClient,
+    exposedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.set("trust proxy", true);
 
 connectDB();
 
-//swagger
-const options = {
+const ensureDirectoryExists = (dirPath) => {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+    console.log(`Created directory: ${dirPath}`);
+  }
+};
+
+const uploadsDir = isProduction
+  ? process.env.UPLOADS_DIR || "/var/www/uploads"
+  : path.join(__dirname, "uploads");
+
+ensureDirectoryExists(path.join(uploadsDir, "avatars"));
+ensureDirectoryExists(path.join(uploadsDir, "temp"));
+
+// swagger
+const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
@@ -26,20 +53,43 @@ const options = {
       description:
         "API документация для образовательной платформы System Content",
     },
-    servers: [
-      {
-        url: "http://localhost:5050",
-      },
-    ],
+    servers: serverUrls.map((url) => ({ url })),
   },
   apis: ["./routes/*.js", "./models/*.js"],
 };
 
-const specs = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerJsdoc(swaggerOptions))
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
+app.use(
+  "/uploads/avatars",
+  express.static(path.join(uploadsDir, "avatars"), {
+    setHeaders: (res) => {
+      res.set("Cache-Control", "public, max-age=300");
+    },
+  })
+);
+
+app.use((req, res, next) => {
+  req.isProduction = isProduction;
+  req.uploadsDir = uploadsDir;
+  next();
+});
+
 const PORT = process.env.PORT || 5050;
-app.listen(PORT, () => console.log(`Сервер запущен на порту ${PORT}`));
+app.listen(PORT, () => {
+  console.log(
+    `Сервер запущен в ${isProduction ? "production" : "development"} режиме`
+  );
+  console.log(`Порт: ${PORT}`);
+  console.log(
+    `CORS разрешен для: ${isProduction ? productionClient : localClient}`
+  );
+  console.log(`Директория загрузок: ${uploadsDir}`);
+});

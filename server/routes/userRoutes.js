@@ -1,4 +1,3 @@
-// src/routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
 const {
@@ -6,8 +5,10 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  updateAvatar,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/auth");
+const upload = require("../middleware/uploadMiddleware");
 
 /**
  * @swagger
@@ -97,7 +98,7 @@ router.get("/:id", authMiddleware, getUserById);
  *       500:
  *         description: Ошибка сервера
  */
-router.patch("/:id", authMiddleware, updateUser);
+router.patch("/:id", upload.avatarUpload.single("avatar"), updateUser);
 
 /**
  * @swagger
@@ -123,5 +124,67 @@ router.patch("/:id", authMiddleware, updateUser);
  *         description: Ошибка сервера
  */
 router.delete("/:id", authMiddleware, deleteUser);
+
+/**
+ * @swagger
+ * /api/users/avatar:
+ *   put:
+ *     summary: Обновление аватара пользователя
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: avatar
+ *         type: file
+ *         description: Файл изображения для аватара
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Аватар успешно обновлён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 avatar:
+ *                   type: string
+ *                   example: "uploads/avatars/3c3d3f3e-4f4a-4b4d-8e8d-9d9c8b7a6e5f.jpg"
+ *                 message:
+ *                   type: string
+ *                   example: "Аватар успешно обновлён"
+ *       400:
+ *         description: Ошибка валидации
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Файл не был загружен"
+ *       401:
+ *         description: Пользователь не авторизован
+ *       404:
+ *         description: Пользователь не найден
+ *       500:
+ *         description: Ошибка сервера
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Ошибка при обновлении аватара"
+ */
+router.put(
+  "/avatar",
+  authMiddleware,
+  upload.avatarUpload.single("avatar"),
+  updateAvatar
+);
 
 module.exports = router;

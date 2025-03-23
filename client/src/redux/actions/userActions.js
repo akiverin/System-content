@@ -64,58 +64,38 @@ export const getAllUsers = () => async (dispatch) => {
   }
 };
 
-export const patchUser =
-  (userId, firstName, lastName, email) => async (dispatch) => {
-    try {
-      dispatch({ type: PATCH_USER_REQUEST });
-      console.log(userId, firstName, lastName);
-      const userInfo = localStorage.getItem("userInfo")
-        ? JSON.parse(localStorage.getItem("userInfo"))
-        : null;
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: userInfo ? `Bearer ${userInfo.token}` : "",
-        },
-      };
-      const { data } = await axios.patch(
-        `/api/users/${userId}`,
-        { firstName, lastName, email },
-        config
-      );
-      dispatch({ type: PATCH_USER_SUCCESS, payload: data });
-    } catch (error) {
-      dispatch({
-        type: PATCH_USER_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      });
-    }
-  };
-
-export const deleteUser = (userId) => async (dispatch) => {
+export const patchUser = (userId, userData, avatarFile) => async (dispatch) => {
   try {
-    dispatch({ type: DELETE_USER_REQUEST });
-    const userInfo = localStorage.getItem("userInfo")
-      ? JSON.parse(localStorage.getItem("userInfo"))
-      : null;
+    dispatch({ type: PATCH_USER_REQUEST });
+
+    const formData = new FormData();
+    for (const key in userData) {
+      formData.append(key, userData[key]);
+    }
+    if (avatarFile) {
+      formData.append("avatar", avatarFile);
+    }
+
+    const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
     const config = {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: userInfo ? `Bearer ${userInfo.token}` : "",
+        "Content-Type": "multipart/form-data",
+        Authorization: userInfo?.token ? `Bearer ${userInfo.token}` : "",
       },
     };
-    const { data } = await axios.delete(`/api/users/${userId}`, config);
-    dispatch({ type: DELETE_USER_SUCCESS, payload: data });
+
+    const { data } = await axios.patch(
+      `/api/users/${userId}`,
+      formData,
+      config
+    );
+
+    dispatch({ type: PATCH_USER_SUCCESS, payload: data });
+    dispatch(getUser(userId));
   } catch (error) {
     dispatch({
-      type: DELETE_USER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      type: PATCH_USER_FAIL,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };
