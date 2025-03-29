@@ -19,6 +19,7 @@
   position: sticky;
   top: 20px;
   box-shadow: v.$shadow;
+  transition: width 0.3s ease-in-out;
 
   &--closed {
     width: 3.8rem;
@@ -33,12 +34,10 @@
       padding-right: 0;
     }
 
-    .navbar__title {
-      display: none;
-    }
-
+    .navbar__title,
     .navbar__link-title {
-      display: none;
+      opacity: 0; // Заменяем display: none на opacity
+      max-width: 0; // Добавляем схлопывание ширины
     }
   }
 
@@ -58,6 +57,11 @@
   &__title {
     font-size: 1.1rem;
     white-space: nowrap;
+    transition: all 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, max-width 0.3s ease-in-out; // Анимация для заголовка
+    overflow: hidden;
+    max-width: 100%;
+    opacity: 1;
   }
 
   &__button {
@@ -91,7 +95,8 @@
     padding-bottom: 0.5rem;
     padding-left: 0.5rem;
     font-weight: 500;
-    transition: color 0.2s, box-shadow 0.1s, background-color 0.2s;
+    transition: color 0.2s, box-shadow 0.1s, background-color 0.2s,
+      padding 0.3s ease-in-out;
     position: relative;
     opacity: 0.85;
 
@@ -115,5 +120,10 @@
   }
 
   &__link-title {
+    opacity: 1;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-width 0s ease-in-out;
   }
 }
