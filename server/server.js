@@ -10,6 +10,7 @@ const swaggerUi = require("swagger-ui-express");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const postRoutes = require("./routes/postRoutes");
 
 const app = express();
 
@@ -63,9 +64,11 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerJsdoc(swaggerOptions))
 );
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.use(
   "/uploads/avatars",

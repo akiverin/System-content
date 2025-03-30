@@ -20,6 +20,7 @@ const Profile = () => {
     group: "",
     image: null,
   });
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     if (auth.user?.userId) {
@@ -46,7 +47,15 @@ const Profile = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, image: e.target.files[0] }));
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, image: file }));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -187,6 +196,12 @@ const Profile = () => {
               />
             </label>
           </div>
+
+          {preview && (
+            <div className="profile__avatar-preview">
+              <img src={preview} alt="Avatar preview" />
+            </div>
+          )}
 
           <div className="profile__form-group">
             <label className="profile__form-label">

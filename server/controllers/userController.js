@@ -104,7 +104,6 @@ exports.updateAvatar = async (req, res) => {
       return res.status(404).json({ error: "Пользователь не найден" });
     }
 
-    // Перемещаем файл из временной директории
     const finalPath = path.join(
       __dirname,
       "../uploads/avatars",
@@ -112,7 +111,6 @@ exports.updateAvatar = async (req, res) => {
     );
     fs.renameSync(req.file.path, finalPath);
 
-    // Обновляем путь к аватару
     user.avatar = `/uploads/avatars/${req.file.filename}`;
     await user.save();
 
