@@ -1,0 +1,11 @@
+.posts {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__item {
+    text-decoration: none;
+  }
+}

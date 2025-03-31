@@ -1,0 +1,53 @@
+@use "@styles/variables" as v;
+
+.post-card {
+  display: flex;
+  padding: 20px;
+  background-color: #f0f0f0;
+  color: #1d1d1d;
+  text-decoration: none;
+  border-radius: 8px;
+  box-shadow: v.$shadow;
+  gap: 16px;
+  justify-content: space-between;
+
+  &__content {
+    gap: 16px;
+    display: flex;
+  }
+
+  &__title {
+    font-size: 1rem;
+    text-decoration: none;
+  }
+
+  &__desc {
+    font-size: 0.8rem;
+  }
+
+  &__image {
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    max-width: 42px;
+    aspect-ratio: 1 / 1;
+    &--default {
+      padding: 4px;
+    }
+  }
+
+  &__tags {
+    display: flex;
+    align-items: center;
+    max-width: 50%;
+    flex-wrap: wrap;
+  }
+
+  &__tag {
+    font-size: 0.8rem;
+    border-radius: 40px;
+    padding: 4px 8px;
+    box-shadow: v.$shadow;
+
+    background-color: #a7eafb;
+  }
+}

@@ -36,7 +36,7 @@ export const postReducer = (state = initialState, action) => {
     case CREATE_POST_SUCCESS:
       return { ...state, loading: false, post: action.payload };
     case GET_ALL_POSTS_SUCCESS:
-      return { ...state, loading: false, allUsers: action.payload };
+      return { ...state, loading: false, allPosts: action.payload };
     case PATCH_POST_SUCCESS:
       return {
         ...state,

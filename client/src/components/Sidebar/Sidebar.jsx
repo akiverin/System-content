@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Sidebar.scss";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -330,7 +329,7 @@ function Sidebar() {
             </li>
           )}
           <li className="navbar__item">
-            <Link to="/" className="navbar__link">
+            <Link to="/posts" className="navbar__link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

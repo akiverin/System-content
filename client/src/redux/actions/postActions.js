@@ -56,6 +56,7 @@ export const getAllPosts = () => async (dispatch) => {
     };
     dispatch({ type: GET_ALL_POSTS_REQUEST });
     const { data } = await axios.get("/api/posts/", config);
+    console.log("Получены данные:", data);
     dispatch({ type: GET_ALL_POSTS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
