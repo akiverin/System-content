@@ -32,8 +32,6 @@ export const getCourse = (courseId) => async (dispatch) => {
     };
     dispatch({ type: GET_COURSE_REQUEST });
     const { data } = await axios.get(`/api/courses/${courseId}`, config);
-    console.log(data);
-
     dispatch({ type: GET_COURSE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

@@ -52,7 +52,6 @@ exports.getCourseById = async (req, res) => {
     if (!course.access.length && req.user.role !== "admin") {
       return res.status(403).json({ message: "Доступ запрещен" });
     }
-    console.log(2, course);
     res.json(course);
   } catch (error) {
     res.status(500).json({ error: error.message });

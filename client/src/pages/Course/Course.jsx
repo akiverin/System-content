@@ -32,7 +32,7 @@ function Course() {
       {loading && <p className="loading">Загрузка...</p>}
       {error && <p className="error">Ошибка! {error}</p>}
 
-      {course && (
+      {course && !error && (
         <>
           <div className="course__header">
             <h1 className="course__title">{course.title}</h1>
@@ -50,7 +50,7 @@ function Course() {
           <ul className="course__list">
             {coursePosts.map((post) => (
               <li className="course__item" key={post._id}>
-                <Link to={`/posts/${post._id}`}>
+                <Link to={`/courses/${course._id}/${post._id}`}>
                   <PostCard post={post} />
                 </Link>
               </li>

@@ -28,8 +28,6 @@ exports.updateUser = async (req, res) => {
     const userId = req.params.id;
     const userData = { ...req.body };
     let avatarFile = req.file;
-
-    console.log(userId, req.body, avatarFile);
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "Пользователь не найден" });

@@ -26,7 +26,6 @@ const Profile = () => {
     if (auth.user?.userId) {
       dispatch(getUser(auth.user.userId));
     }
-    console.log(profile);
   }, [auth.user, dispatch, profile]);
 
   useEffect(() => {
