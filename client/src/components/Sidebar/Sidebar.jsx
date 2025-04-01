@@ -329,7 +329,7 @@ function Sidebar() {
             </li>
           )}
           <li className="navbar__item">
-            <Link to="/posts" className="navbar__link">
+            <Link to="/courses" className="navbar__link">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

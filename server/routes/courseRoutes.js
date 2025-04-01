@@ -141,7 +141,7 @@ router.get("/", getCourses);
  *       500:
  *         description: Ошибка сервера
  */
-router.get("/:id", getCourseById);
+router.get("/:id", authMiddleware, getCourseById);
 
 /**
  * @swagger

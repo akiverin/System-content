@@ -5,14 +5,16 @@ import Profile from "../pages/Profile/";
 import Auth from "../pages/Auth";
 import Logout from "../pages/Logout";
 import PrivateRoute from "@components/PrivateRoute";
-import Posts from "../pages/Posts/Posts";
+import Courses from "../pages/Courses";
+import Course from "../pages/Course";
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/auth" element={<Auth />} />
-      <Route path="/posts" element={<Posts />} />
+      <Route path="/courses" element={<Courses />} />
+      <Route path="/courses/:id" element={<Course />} />
       <Route element={<PrivateRoute />}>
         <Route path="/logout" element={<Logout />} />
         <Route path="/profile" element={<Profile />} />

@@ -54,6 +54,7 @@ export const postReducer = (state = initialState, action) => {
     case GET_ALL_POSTS_FAIL:
     case PATCH_POST_FAIL:
     case DELETE_POST_FAIL:
+    case CREATE_POST_FAIL:
       return { ...state, loading: false, error: action.payload };
     default:
       return state;

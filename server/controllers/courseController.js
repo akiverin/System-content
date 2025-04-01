@@ -40,8 +40,8 @@ exports.getCourseById = async (req, res) => {
       .populate("access", "name")
       .populate({
         path: "content.resourceId",
-        select: "title url duration", // Пример полей для связанных ресурсов
-        options: { sort: { order: 1 } },
+        select: "title duration", // Пример полей для связанных ресурсов
+        // options: { sort: { order: 1 } },
       });
 
     if (!course) {
@@ -52,7 +52,7 @@ exports.getCourseById = async (req, res) => {
     if (!course.access.length && req.user.role !== "admin") {
       return res.status(403).json({ message: "Доступ запрещен" });
     }
-
+    console.log(2, course);
     res.json(course);
   } catch (error) {
     res.status(500).json({ error: error.message });
