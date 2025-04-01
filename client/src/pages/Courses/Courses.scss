@@ -1,0 +1,17 @@
+.courses {
+  &__wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  &__title {
+    margin: 20px 0 40px;
+  }
+
+  &__list {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+}

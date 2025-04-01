@@ -27,7 +27,7 @@ const Profile = () => {
       dispatch(getUser(auth.user.userId));
     }
     console.log(profile);
-  }, [auth.user, dispatch]);
+  }, [auth.user, dispatch, profile]);
 
   useEffect(() => {
     if (profile) {

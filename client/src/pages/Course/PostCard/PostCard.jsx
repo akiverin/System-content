@@ -2,14 +2,15 @@ import React from "react";
 import "./PostCard.scss";
 import docIcon from "@assets/doc.svg";
 
-function PostCard(props) {
-  console.log(props);
+function PostCard(postContent) {
+  const post = postContent.post;
+
   return (
     <div className="post-card">
       <div className="post-card__content">
-        {props.image ? (
+        {post.image ? (
           <img
-            src={props.image}
+            src={post.image}
             alt="post card image"
             className="post-card__image"
           />
@@ -21,14 +22,14 @@ function PostCard(props) {
           />
         )}
         <div className="post-card__info">
-          <p className="post-card__title">{props.title}</p>
-          <p className="post-card__desc">{props.desc}</p>
+          <p className="post-card__title">{post.title}</p>
+          <p className="post-card__desc">{post.desc}</p>
         </div>
       </div>
 
-      {props.tags && (
+      {post.tags && (
         <ul className="post-card__tags">
-          {props.tags.map((tag, index) => (
+          {post.tags.map((tag, index) => (
             <li className="post-card__tag" key={index}>
               {tag}
             </li>

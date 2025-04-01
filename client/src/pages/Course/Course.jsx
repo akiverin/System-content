@@ -28,39 +28,34 @@ function Course() {
       })) || [];
 
   return (
-    <div className="course-page">
+    <div className="course">
       {loading && <p className="loading">Загрузка...</p>}
       {error && <p className="error">Ошибка! {error}</p>}
 
       {course && (
         <>
-          <div className="course-header">
-            <h1 className="course-title">{course.title}</h1>
-            <p className="course-description">{course.desc}</p>
+          <div className="course__header">
+            <h1 className="course__title">{course.title}</h1>
+            <p className="course__description">{course.desc}</p>
             {course.image && (
               <img
                 src={course.image}
                 alt="Обложка курса"
-                className="course-cover"
+                className="course__cover"
               />
             )}
           </div>
 
-          <h2 className="posts-section-title">Материалы курса</h2>
-          <div className="posts-grid">
+          <h2 className="course__subtitle">Материалы курса</h2>
+          <ul className="course__list">
             {coursePosts.map((post) => (
-              <div className="post-card-wrapper" key={post._id}>
+              <li className="course__item" key={post._id}>
                 <Link to={`/posts/${post._id}`}>
-                  <PostCard
-                    title={post.title}
-                    desc={post.desc}
-                    tags={post.tags}
-                    image={post.image}
-                  />
+                  <PostCard post={post} />
                 </Link>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </>
       )}
     </div>

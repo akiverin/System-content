@@ -14,8 +14,8 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/courses" element={<Courses />} />
-      <Route path="/courses/:id" element={<Course />} />
       <Route element={<PrivateRoute />}>
+        <Route path="/courses/:id" element={<Course />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
