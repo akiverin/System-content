@@ -76,7 +76,7 @@ exports.createCourse = async (req, res) => {
       })),
       tags: tags.filter((t, i, a) => a.indexOf(t) === i).slice(0, 10),
       access,
-      image: image || "/default-course.jpg",
+      image: image || null,
       creator: req.user.id,
     });
 

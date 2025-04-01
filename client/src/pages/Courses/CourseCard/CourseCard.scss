@@ -1,0 +1,51 @@
+@use "@styles/variables" as v;
+
+.course-card {
+  position: relative;
+  height: 360px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &__image {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+
+  &__info {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: v.$auth-bg;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: v.$auth-color;
+    width: max-content;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  &__tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  &__tag {
+    font-size: 0.8rem;
+    border-radius: 40px;
+    padding: 4px 8px;
+    box-shadow: v.$shadow;
+    background-color: v.$badge-bg;
+  }
+}

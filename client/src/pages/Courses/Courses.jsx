@@ -3,6 +3,7 @@ import "./Courses.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCourses } from "../../redux/actions/courseActions";
 import { Link } from "react-router-dom";
+import CourseCard from "./CourseCard";
 
 function Courses() {
   const dispatch = useDispatch();
@@ -24,7 +25,9 @@ function Courses() {
       <ul className="posts__list">
         {courses.courses?.map((course) => (
           <li className="posts__item" key={course._id}>
-            <Link to={`/courses/${course._id}`}>{course.title}</Link>
+            <Link to={`/courses/${course._id}`}>
+              <CourseCard course={course} />
+            </Link>
           </li>
         ))}
       </ul>
