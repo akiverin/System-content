@@ -24,30 +24,60 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  const userId = req.params.id;
+  const userData = { ...req.body };
+  const avatarFile = req.file;
+  const uploadsDir = req.uploadsDir;
+
   try {
-    const userId = req.params.id;
-    const userData = { ...req.body };
-    let avatarFile = req.file;
+    // 1. Находим пользователя
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "Пользователь не найден" });
     }
 
+    // 2. Обрабатываем аватар
     if (avatarFile) {
-      if (user.image) {
-        const oldAvatarPath = path.join(__dirname, "..", user.image);
-        if (fs.existsSync(oldAvatarPath)) {
-          fs.unlinkSync(oldAvatarPath);
+      try {
+        // Удаляем старый аватар
+        if (user.image) {
+          const oldAvatarPath = path.join(uploadsDir, user.image);
+          try {
+            await fs.unlink(oldAvatarPath);
+          } catch (unlinkErr) {
+            if (unlinkErr.code !== "ENOENT") throw unlinkErr; // Игнорируем ошибку если файл не существует
+          }
         }
-      }
-      const fileExt = path.extname(avatarFile.originalname);
-      const avatarFileName = `${uuid()}${fileExt}`;
-      const avatarPath = path.join("uploads", "avatars", avatarFileName);
 
-      fs.renameSync(avatarFile.path, path.join(__dirname, "..", avatarPath));
-      userData.image = avatarPath;
+        // Генерируем новый путь
+        const fileExt = path.extname(avatarFile.originalname);
+        const avatarFileName = `${uuid()}${fileExt}`;
+        const avatarPath = path.join("avatars", avatarFileName);
+        const targetPath = path.join(uploadsDir, avatarPath);
+
+        // Создаём директорию если не существует
+        await fs.mkdir(path.dirname(targetPath), { recursive: true });
+
+        // Перемещаем файл (с поддержкой разных файловых систем)
+        await fs
+          .rename(avatarFile.path, targetPath)
+          .catch(async (renameErr) => {
+            // Если переименование не работает между файловыми системами
+            await fs.copyFile(avatarFile.path, targetPath);
+            await fs.unlink(avatarFile.path);
+          });
+
+        userData.image = avatarPath; // Сохраняем относительный путь
+      } catch (fileError) {
+        return res.status(500).json({
+          message: "Ошибка при обработке изображения",
+          error: fileError.message,
+        });
+      }
     }
-    const fieldsToUpdate = [
+
+    // 3. Обновляем разрешённые поля
+    const allowedFields = [
       "firstName",
       "lastName",
       "email",
@@ -55,27 +85,33 @@ exports.updateUser = async (req, res) => {
       "group",
       "image",
     ];
-    fieldsToUpdate.forEach((field) => {
+    allowedFields.forEach((field) => {
       if (userData[field] !== undefined) {
         user[field] = userData[field];
       }
     });
 
+    // 4. Сохраняем изменения
     const updatedUser = await user.save();
     const userResponse = updatedUser.toObject();
     delete userResponse.password;
 
     res.json(userResponse);
   } catch (error) {
-    console.error(error);
-
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
+    // Удаляем временный файл при ошибке
+    if (avatarFile) {
+      try {
+        await fs.unlink(avatarFile.path);
+      } catch (unlinkErr) {
+        console.error("Ошибка удаления временного файла:", unlinkErr);
+      }
     }
 
+    // Обработка ошибок
     const statusCode = error.name === "ValidationError" ? 400 : 500;
     res.status(statusCode).json({
       message: error.message || "Ошибка при обновлении пользователя",
+      errors: error.errors, // Для mongoose validation errors
     });
   }
 };

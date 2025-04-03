@@ -76,7 +76,10 @@ app.use(
   "/uploads/avatars",
   express.static(path.join(uploadsDir, "avatars"), {
     setHeaders: (res) => {
-      res.set("Cache-Control", "public, max-age=300");
+      res.set({
+        "Cache-Control": "public, max-age=300",
+        "Access-Control-Allow-Origin": "*",
+      });
     },
   })
 );
