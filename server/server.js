@@ -12,6 +12,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const courseRoutes = require("./routes/courseRoutes");
+const groupRoutes = require("./routes/groupRoutes");
 
 const app = express();
 
@@ -71,6 +72,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/courses", courseRoutes);
+app.use("/api/groups", groupRoutes);
 
 app.use(
   "/uploads/avatars",
