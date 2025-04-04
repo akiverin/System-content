@@ -8,6 +8,7 @@ import PrivateRoute from "@components/PrivateRoute";
 import Courses from "../pages/Courses";
 import Course from "../pages/Course";
 import Post from "../pages/Post";
+import Groups from "../pages/Groups";
 
 function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ function AppRoutes() {
         <Route path="/courses/:idCourse/:id" element={<Post />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/groups" element={<Groups />} />
       </Route>
     </Routes>
   );
