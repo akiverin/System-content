@@ -8,7 +8,6 @@ const {
   updateCourseById,
 } = require("../controllers/courseController");
 const authMiddleware = require("../middleware/auth");
-const upload = require("../middleware/uploadMiddleware");
 
 /**
  * @swagger

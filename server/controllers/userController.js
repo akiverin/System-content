@@ -1,7 +1,5 @@
 const User = require("../models/User");
-const path = require("path");
-const fs = require("fs");
-const uuid = require("uuid").v4;
+const cloudinary = require("../config/cloudinary");
 
 exports.getUsers = async (req, res) => {
   try {
@@ -24,98 +22,70 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const userId = req.params.id;
-  const userData = { ...req.body };
-  const avatarFile = req.file;
-  const uploadsDir = req.uploadsDir;
-
   try {
-    // 1. Находим пользователя
+    const userId = req.params.id;
     const user = await User.findById(userId);
-    if (!user) {
+    if (!user)
       return res.status(404).json({ message: "Пользователь не найден" });
-    }
 
-    // 2. Обрабатываем аватар
-    if (avatarFile) {
-      try {
-        // Удаляем старый аватар
-        if (user.image) {
-          const oldAvatarPath = path.join(uploadsDir, user.image);
-          try {
-            await fs.unlink(oldAvatarPath);
-          } catch (unlinkErr) {
-            if (unlinkErr.code !== "ENOENT") throw unlinkErr; // Игнорируем ошибку если файл не существует
-          }
-        }
-
-        // Генерируем новый путь
-        const fileExt = path.extname(avatarFile.originalname);
-        const avatarFileName = `${uuid()}${fileExt}`;
-        const avatarPath = path.join("avatars", avatarFileName);
-        const targetPath = path.join(uploadsDir, avatarPath);
-
-        // Создаём директорию если не существует
-        await fs.mkdir(path.dirname(targetPath), { recursive: true });
-
-        // Перемещаем файл (с поддержкой разных файловых систем)
-        await fs
-          .rename(avatarFile.path, targetPath)
-          .catch(async (renameErr) => {
-            // Если переименование не работает между файловыми системами
-            await fs.copyFile(avatarFile.path, targetPath);
-            await fs.unlink(avatarFile.path);
-          });
-
-        userData.image = avatarPath; // Сохраняем относительный путь
-      } catch (fileError) {
-        return res.status(500).json({
-          message: "Ошибка при обработке изображения",
-          error: fileError.message,
-        });
+    // Обработка аватара
+    if (req.file) {
+      // Удаление старого изображения
+      if (user.image?.public_id) {
+        await cloudinary.uploader.destroy(user.image.public_id);
       }
+
+      // Загрузка нового изображения
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "avatars",
+            allowed_formats: ["jpg", "png", "jpeg", "gif"],
+            transformation: [{ width: 500, height: 500, crop: "limit" }],
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        uploadStream.end(req.file.buffer);
+      });
+
+      user.image = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
     }
 
-    // 3. Обновляем разрешённые поля
-    const allowedFields = [
-      "firstName",
-      "lastName",
-      "email",
-      "role",
-      "group",
-      "image",
-    ];
-    allowedFields.forEach((field) => {
-      if (userData[field] !== undefined) {
-        user[field] = userData[field];
+    // Обновление остальных полей
+    const updatableFields = ["firstName", "lastName", "email", "role", "group"];
+    updatableFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        user[field] = req.body[field];
       }
     });
 
-    // 4. Сохраняем изменения
+    // Валидация и сохранение
+    await user.validate();
     const updatedUser = await user.save();
-    const userResponse = updatedUser.toObject();
-    delete userResponse.password;
 
-    res.json(userResponse);
+    // Формирование ответа
+    const responseUser = updatedUser.toObject();
+    delete responseUser.password;
+
+    res.json({
+      ...responseUser,
+      image: updatedUser.image,
+    });
   } catch (error) {
-    // Удаляем временный файл при ошибке
-    if (avatarFile) {
-      try {
-        await fs.unlink(avatarFile.path);
-      } catch (unlinkErr) {
-        console.error("Ошибка удаления временного файла:", unlinkErr);
-      }
-    }
-
-    // Обработка ошибок
-    const statusCode = error.name === "ValidationError" ? 400 : 500;
-    res.status(statusCode).json({
-      message: error.message || "Ошибка при обновлении пользователя",
-      errors: error.errors, // Для mongoose validation errors
+    console.error("Update error:", error);
+    res.status(500).json({
+      message: error.message,
+      errors: error.errors || undefined,
     });
   }
 };
-
 exports.deleteUser = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -124,38 +94,5 @@ exports.deleteUser = async (req, res) => {
     res.json({ message: "Пользователь успешно удален" });
   } catch (error) {
     res.status(500).json({ error: error.message });
-  }
-};
-
-exports.updateAvatar = async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "Файл не загружен" });
-    }
-
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: "Пользователь не найден" });
-    }
-
-    const finalPath = path.join(
-      __dirname,
-      "../uploads/avatars",
-      req.file.filename
-    );
-    fs.renameSync(req.file.path, finalPath);
-
-    user.avatar = `/uploads/avatars/${req.file.filename}`;
-    await user.save();
-
-    res.json({
-      avatar: `http://syscontent.kiver.net/api${user.avatar}`,
-      message: "Аватар успешно обновлён",
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Ошибка при обновлении аватара",
-    });
   }
 };

@@ -67,11 +67,11 @@ export const getAllUsers = () => async (dispatch) => {
 export const patchUser = (userId, userData, avatarFile) => async (dispatch) => {
   try {
     dispatch({ type: PATCH_USER_REQUEST });
-
     const formData = new FormData();
     for (const key in userData) {
       formData.append(key, userData[key]);
     }
+
     if (avatarFile) {
       formData.append("avatar", avatarFile);
     }
@@ -91,7 +91,7 @@ export const patchUser = (userId, userData, avatarFile) => async (dispatch) => {
     );
 
     dispatch({ type: PATCH_USER_SUCCESS, payload: data });
-    dispatch(getUser(userId));
+    // Не нужно повторно запрашивать данные
   } catch (error) {
     dispatch({
       type: PATCH_USER_FAIL,

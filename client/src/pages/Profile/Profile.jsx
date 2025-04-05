@@ -83,13 +83,11 @@ const Profile = () => {
 
   const avatarUrl = useMemo(() => {
     if (preview) return preview;
-    if (profile?.image) {
-      return profile.image.startsWith("http")
-        ? profile.image
-        : `${window.location.origin}/${profile.image}`;
+    if (profile?.image?.url) {
+      return profile.image.url;
     }
-    return defaultAvatar;
-  }, [preview, profile?.image]);
+    return `https://ui-avatars.com/api/?name=${profile.firstName}+${profile.lastName}`;
+  }, [preview, profile]);
 
   if (!profile && loading)
     return <div className="profile__loading">Загрузка...</div>;
@@ -102,7 +100,7 @@ const Profile = () => {
 
         <div className="profile__image-container">
           <img
-            src={`${avatarUrl}?v=${profile?.updatedAt}`}
+            src={avatarUrl}
             alt="Аватар"
             className="profile__image"
             onError={(e) => (e.target.src = defaultAvatar)}

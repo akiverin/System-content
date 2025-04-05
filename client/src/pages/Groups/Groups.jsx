@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllGroups, searchGroups } from "../../redux/actions/groupActions";
 import { Link } from "react-router-dom";
 import Search from "@components/Search";
+import GroupCard from "./GroupCard";
 
 function Groups() {
   const dispatch = useDispatch();
@@ -25,7 +26,6 @@ function Groups() {
     loading,
     error,
   } = useSelector((state) => state.group);
-
   return (
     <div className="groups">
       <div className="groups__wrapper">
@@ -36,7 +36,9 @@ function Groups() {
         <ul className="groups__list">
           {groups.groups?.map((group) => (
             <li className="groups__item" key={group._id}>
-              <Link to={`/groups/${group._id}`}>{group.name}</Link>
+              <Link to={`/groups/${group._id}`}>
+                <GroupCard groupName={group.name} members={group.members} />
+              </Link>
             </li>
           ))}
         </ul>

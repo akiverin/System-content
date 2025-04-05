@@ -8,7 +8,6 @@ const {
   updatePostById,
 } = require("../controllers/postController");
 const authMiddleware = require("../middleware/auth");
-const upload = require("../middleware/uploadMiddleware");
 
 /**
  * @swagger

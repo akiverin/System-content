@@ -2,8 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
-const path = require("path");
-const fs = require("fs");
 
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -29,24 +27,9 @@ app.use(
 );
 
 app.set("trust proxy", true);
-
 connectDB();
 
-const ensureDirectoryExists = (dirPath) => {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-    console.log(`Created directory: ${dirPath}`);
-  }
-};
-
-const uploadsDir = isProduction
-  ? process.env.UPLOADS_DIR || "/var/www/uploads"
-  : path.join(__dirname, "uploads");
-
-ensureDirectoryExists(path.join(uploadsDir, "avatars"));
-ensureDirectoryExists(path.join(uploadsDir, "temp"));
-
-// swagger
+// Swagger Configuration
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -66,29 +49,20 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerJsdoc(swaggerOptions))
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/groups", groupRoutes);
 
-app.use(
-  "/uploads/avatars",
-  express.static(path.join(uploadsDir, "avatars"), {
-    setHeaders: (res) => {
-      res.set({
-        "Cache-Control": "public, max-age=300",
-        "Access-Control-Allow-Origin": "*",
-      });
-    },
-  })
-);
-
+// Middleware
 app.use((req, res, next) => {
   req.isProduction = isProduction;
-  req.uploadsDir = uploadsDir;
   next();
 });
 
@@ -101,5 +75,4 @@ app.listen(PORT, () => {
   console.log(
     `CORS разрешен для: ${isProduction ? productionClient : localClient}`
   );
-  console.log(`Директория загрузок: ${uploadsDir}`);
 });
