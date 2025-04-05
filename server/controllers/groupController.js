@@ -39,11 +39,27 @@ exports.createGroup = async (req, res) => {
 // Получение всех групп
 exports.getGroups = async (req, res) => {
   try {
-    const groups = await Group.find()
+    const searchQuery = req.query.search || "";
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const filter = {
+      name: { $regex: searchQuery, $options: "i" },
+    };
+    const total = await Group.countDocuments(filter);
+
+    const groups = await Group.find(filter)
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate("members", "-password")
       .populate("createdBy", "-password");
 
-    res.json(groups);
+    res.json({
+      groups,
+      page,
+      pages: Math.ceil(total / limit),
+      total,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

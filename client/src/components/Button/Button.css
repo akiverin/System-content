@@ -1,0 +1,15 @@
+.button {
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #292929;
+  border-radius: 0.5625rem;
+  padding: 0.6rem 1.4rem;
+  transition: transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955), background-color 0.2s, box-shadow 0.2s;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1215686275), inset 0 2px 3px rgba(255, 255, 255, 0.1019607843), inset 0 -4px 1px rgba(0, 0, 0, 0.1607843137);
+}
+.button:hover {
+  background-color: #353535;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 4px rgba(0, 0, 0, 0.1294117647), inset 0 0 0 1px rgba(255, 255, 255, 0.1215686275), inset 0 2px 5px rgba(255, 255, 255, 0.2), inset 0 -4px 1px rgba(0, 0, 0, 0.2);
+}/*# sourceMappingURL=Button.css.map */

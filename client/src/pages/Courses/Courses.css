@@ -1,0 +1,13 @@
+.courses__wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.courses__title {
+  margin: 20px 0 40px;
+}
+.courses__list {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}/*# sourceMappingURL=Courses.css.map */
