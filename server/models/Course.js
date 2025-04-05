@@ -25,6 +25,12 @@ const ContentItemSchema = new mongoose.Schema(
       min: 0,
       comment: "Продолжительность в минутах",
     },
+    access: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group",
+      },
+    ],
   },
   { _id: false }
 );

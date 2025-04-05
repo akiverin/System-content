@@ -25,7 +25,7 @@ function Groups() {
     loading,
     error,
   } = useSelector((state) => state.group);
-  console.log(groups);
+
   return (
     <div className="groups">
       <div className="groups__wrapper">
@@ -34,7 +34,7 @@ function Groups() {
         {loading && <p>Загрузка...</p>}
         {error && <p>Ошибка! {error}</p>}
         <ul className="groups__list">
-          {groups?.map((group) => (
+          {groups.groups?.map((group) => (
             <li className="groups__item" key={group._id}>
               <Link to={`/groups/${group._id}`}>{group.name}</Link>
             </li>

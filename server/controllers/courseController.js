@@ -1,11 +1,52 @@
 const Course = require("../models/Course");
+const Group = require("../models/Group");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User"); // Импорт модели пользователя
 
-// Получение всех курсов с пагинацией и фильтрацией
 exports.getCourses = async (req, res) => {
   try {
     const { page = 1, limit = 10, search } = req.query;
     const filter = {};
+    let accessFilter = {};
+    let user = null;
 
+    // 1. Попытка получить пользователя из токена (без блокировки запроса)
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        user = await User.findById(decoded.id).select("role");
+
+        // Добавляем группы пользователя только если он не админ
+        if (user.role !== "admin") {
+          const userGroups = await Group.find({ members: user._id }).select(
+            "_id"
+          );
+          user.groupIds = userGroups.map((g) => g._id);
+        }
+      } catch (error) {
+        // Невалидный токен игнорируем, user остается null
+      }
+    }
+
+    // 2. Построение фильтра доступа
+    if (user?.role === "admin") {
+      // Администраторы видят все курсы
+    } else if (user) {
+      // Авторизованные пользователи (не админы)
+      accessFilter = {
+        $or: [
+          { access: { $size: 0 } }, // Доступ для всех
+          { access: { $in: user.groupIds } }, // Доступ по группам
+        ],
+      };
+    } else {
+      // Неавторизованные пользователи
+      accessFilter = { access: { $size: 0 } };
+    }
+
+    // 3. Добавляем поисковый фильтр
     if (search) {
       filter.$or = [
         { title: { $regex: search, $options: "i" } },
@@ -13,14 +54,20 @@ exports.getCourses = async (req, res) => {
       ];
     }
 
-    const courses = await Course.find(filter)
+    // 4. Объединяем фильтры
+    const finalFilter =
+      Object.keys(filter).length > 0
+        ? { $and: [filter, accessFilter] }
+        : accessFilter;
+
+    // 5. Выполнение запроса
+    const courses = await Course.find(finalFilter)
       .populate("creator", "-password")
-      .populate("access", "name")
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ createdAt: -1 });
 
-    const count = await Course.countDocuments(filter);
+    const count = await Course.countDocuments(finalFilter);
 
     res.json({
       totalPages: Math.ceil(count / limit),
@@ -37,7 +84,6 @@ exports.getCourseById = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id)
       .populate("creator", "-password")
-      .populate("access", "name")
       .populate({
         path: "content.resourceId",
         select: "title duration", // Пример полей для связанных ресурсов
@@ -49,8 +95,19 @@ exports.getCourseById = async (req, res) => {
     }
 
     // Проверка доступа
-    if (!course.access.length && req.user.role !== "admin") {
-      return res.status(403).json({ message: "Доступ запрещен" });
+    if (req.user.role !== "admin") {
+      // Если access не пуст - проверяем группы
+      if (course.access.length > 0) {
+        const userGroups = await Group.find({
+          _id: { $in: course.access.map((g) => g._id) },
+          members: req.user.id,
+        }).countDocuments();
+
+        if (userGroups === 0) {
+          return res.status(403).json({ message: "Доступ запрещен" });
+        }
+      }
+      // Если access пуст - доступ разрешен автоматически
     }
     res.json(course);
   } catch (error) {

@@ -26,12 +26,12 @@
     flex-direction: column;
     gap: 6px;
     color: v.$auth-color;
-    width: max-content;
   }
 
   &__title {
     font-size: 2rem;
     font-weight: 600;
+    line-height: 1.2;
   }
 
   &__tags {
