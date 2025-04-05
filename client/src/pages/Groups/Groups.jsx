@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import "./Groups.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllGroups } from "../../redux/actions/groupActions";
+import { getAllGroups, searchGroups } from "../../redux/actions/groupActions";
 import { Link } from "react-router-dom";
+import Search from "@components/Search";
 
 function Groups() {
   const dispatch = useDispatch();
@@ -10,6 +11,14 @@ function Groups() {
   useEffect(() => {
     dispatch(getAllGroups());
   }, []);
+
+  const handleSearch = (query) => {
+    if (query) {
+      dispatch(searchGroups(query));
+    } else {
+      dispatch(getAllGroups());
+    }
+  };
 
   const {
     allGroups: groups,
@@ -21,6 +30,7 @@ function Groups() {
     <div className="groups">
       <div className="groups__wrapper">
         <h1 className="groups__title">Группы</h1>
+        <Search onSearch={handleSearch} />
         {loading && <p>Загрузка...</p>}
         {error && <p>Ошибка! {error}</p>}
         <ul className="groups__list">

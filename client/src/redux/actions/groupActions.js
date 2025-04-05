@@ -209,3 +209,26 @@ export const removeGroupMember = (groupId, userId) => async (dispatch) => {
     });
   }
 };
+
+export const searchGroups = (searchTerm) => async (dispatch) => {
+  try {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    dispatch({ type: GET_ALL_GROUPS_REQUEST });
+    const { data } = await axios.get(
+      `/api/groups?search=${searchTerm}`,
+      config
+    );
+    dispatch({ type: GET_ALL_GROUPS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_ALL_GROUPS_FAIL,
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
