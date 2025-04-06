@@ -11,6 +11,7 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const groupRoutes = require("./routes/groupRoutes");
+const videoRoutes = require("./routes/videoRoutes");
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/groups", groupRoutes);
+app.use("/api/videos", videoRoutes);
 
 // Middleware
 app.use((req, res, next) => {
