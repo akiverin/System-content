@@ -1,7 +1,7 @@
 const Course = require("../models/Course");
 const Group = require("../models/Group");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // Импорт модели пользователя
+const User = require("../models/User");
 
 exports.getCourses = async (req, res) => {
   try {
@@ -118,8 +118,32 @@ exports.getCourseById = async (req, res) => {
 // Создание нового курса
 exports.createCourse = async (req, res) => {
   try {
-    const { title, desc, content, tags, access, image } = req.body;
+    const { title, desc, content, tags, access } = req.body;
+    let imageData = null;
+    // Обработка изображения
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "courses",
+            allowed_formats: ["jpg", "png", "jpeg", "gif"],
+            transformation: [{ width: 800, height: 500, crop: "limit" }],
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.end(req.file.buffer);
+      });
 
+      imageData = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
+    }
+
+    // Валидация и создание курса
     const newCourse = new Course({
       title,
       desc,
@@ -130,16 +154,23 @@ exports.createCourse = async (req, res) => {
         order: parseInt(item.order),
         duration: parseInt(item.duration) || 0,
       })),
-      tags: tags.filter((t, i, a) => a.indexOf(t) === i).slice(0, 10),
+      tags: tags
+        ? tags.filter((t, i, a) => a.indexOf(t) === i).slice(0, 10)
+        : null,
       access,
-      image: image || null,
+      image: imageData || null,
       creator: req.user.id,
     });
+
+    console.log(newCourse);
 
     const savedCourse = await newCourse.save();
     res.status(201).json(savedCourse);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({
+      error: error.message,
+      details: error.errors,
+    });
   }
 };
 

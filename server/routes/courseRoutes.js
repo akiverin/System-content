@@ -8,6 +8,8 @@ const {
   updateCourseById,
 } = require("../controllers/courseController");
 const authMiddleware = require("../middleware/auth");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
 
 /**
  * @swagger
@@ -66,7 +68,7 @@ const authMiddleware = require("../middleware/auth");
  *       500:
  *         description: Ошибка сервера
  */
-router.post("/", authMiddleware, createCourse);
+router.post("/", authMiddleware, upload.single("image"), createCourse);
 
 /**
  * @swagger
@@ -195,7 +197,7 @@ router.get("/:id", authMiddleware, getCourseById);
  *       500:
  *         description: Ошибка сервера
  */
-router.patch("/:id", authMiddleware, updateCourseById);
+router.patch("/:id", authMiddleware, upload.single("image"), updateCourseById);
 
 /**
  * @swagger

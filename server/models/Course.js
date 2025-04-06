@@ -62,7 +62,10 @@ const CourseSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  image: { type: String },
+  image: {
+    public_id: String,
+    url: String,
+  },
 });
 
 module.exports = mongoose.model("Course", CourseSchema);
