@@ -1,14 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   getUsers,
   getUserById,
   updateUser,
   deleteUser,
-  updateAvatar,
-} = require("../controllers/userController");
-const authMiddleware = require("../middleware/auth");
-const multer = require("multer");
+} from "../controllers/userController.js";
+const router = express.Router();
+import authMiddleware from "../middleware/auth.js";
+import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
 /**
@@ -126,4 +125,25 @@ router.patch("/:id", authMiddleware, upload.single("avatar"), updateUser);
  */
 router.delete("/:id", authMiddleware, deleteUser);
 
-module.exports = router;
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         email:
+ *           type: string
+ *         role:
+ *           type: string
+ *         group:
+ *           type: string
+ */
+
+export default router;

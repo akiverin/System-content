@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -9,7 +9,7 @@ const generateToken = (user) => {
   );
 };
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password, role, group } = req.body;
     const userExists = await User.findOne({ email });
@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -48,7 +48,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.changePassword = async (req, res) => {
+export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user.id;

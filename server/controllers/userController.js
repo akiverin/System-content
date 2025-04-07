@@ -1,7 +1,7 @@
-const User = require("../models/User");
-const cloudinary = require("../config/cloudinary");
+import User from "../models/User.js";
+import cloudinary from "../config/cloudinary.js";
 
-exports.getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password"); // не возвращаем пароль
     res.json(users);
@@ -10,7 +10,7 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-exports.getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
     if (!user)
@@ -21,7 +21,7 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await User.findById(userId);
@@ -86,7 +86,7 @@ exports.updateUser = async (req, res) => {
     });
   }
 };
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (!deletedUser)

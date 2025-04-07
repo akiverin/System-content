@@ -1,9 +1,10 @@
-const Course = require("../models/Course");
-const Group = require("../models/Group");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import Course from "../models/Course.js";
+import Group from "../models/Group.js";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import cloudinary from "../config/cloudinary.js";
 
-exports.getCourses = async (req, res) => {
+export const getCourses = async (req, res) => {
   try {
     const { page = 1, limit = 10, search } = req.query;
     const filter = {};
@@ -80,7 +81,7 @@ exports.getCourses = async (req, res) => {
 };
 
 // Получение курса по ID с полной информацией
-exports.getCourseById = async (req, res) => {
+export const getCourseById = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id)
       .populate("creator", "-password")
@@ -116,7 +117,7 @@ exports.getCourseById = async (req, res) => {
 };
 
 // Создание нового курса
-exports.createCourse = async (req, res) => {
+export const createCourse = async (req, res) => {
   try {
     const { title, desc, content, tags, access } = req.body;
     let imageData = null;
@@ -175,7 +176,7 @@ exports.createCourse = async (req, res) => {
 };
 
 // Обновление курса
-exports.updateCourseById = async (req, res) => {
+export const updateCourseById = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
     if (!course) {
@@ -230,7 +231,7 @@ exports.updateCourseById = async (req, res) => {
 };
 
 // Удаление курса
-exports.deleteCourseById = async (req, res) => {
+export const deleteCourseById = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
     if (!course) {

@@ -1,5 +1,5 @@
-const Video = require("../models/Video");
-const cloudinary = require("cloudinary").v2;
+import Video from "../models/Video.js";
+import cloudinary from "../config/cloudinary.js";
 
 /**
  * Helper: Загружает файл в Cloudinary с использованием upload_stream.
@@ -29,7 +29,7 @@ const uploadToCloudinary = (
  * Создание нового видео.
  * Загружает видео и (опционально) обложку через Cloudinary.
  */
-exports.createVideo = async (req, res) => {
+export const createVideo = async (req, res) => {
   try {
     const { title, desc, duration, tags, access } = req.body;
 
@@ -85,7 +85,7 @@ exports.createVideo = async (req, res) => {
 /**
  * Получение списка видео с поиском и пагинацией.
  */
-exports.getVideos = async (req, res) => {
+export const getVideos = async (req, res) => {
   try {
     const searchQuery = req.query.search || "";
     const page = Number(req.query.page) || 1;
@@ -116,7 +116,7 @@ exports.getVideos = async (req, res) => {
 /**
  * Получение видео по ID.
  */
-exports.getVideoById = async (req, res) => {
+export const getVideoById = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
       .populate("access")
@@ -134,7 +134,7 @@ exports.getVideoById = async (req, res) => {
  * Обновление видео по ID.
  * Позволяет обновить поля видео, а также загрузить новый видеофайл и/или обложку.
  */
-exports.updateVideoById = async (req, res) => {
+export const updateVideoById = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
     if (!video) {
@@ -203,7 +203,7 @@ exports.updateVideoById = async (req, res) => {
  * Удаление видео по ID.
  * Удаляет запись и, при наличии, удаляет связанные файлы в Cloudinary.
  */
-exports.deleteVideoById = async (req, res) => {
+export const deleteVideoById = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
     if (!video) {

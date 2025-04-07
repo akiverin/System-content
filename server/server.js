@@ -1,25 +1,31 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const connectDB = require("./config/db");
+import dotenv from "dotenv";
+dotenv.config();
 
-const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
+import express from "express";
+import cors from "cors";
+import connectDB from "./config/db.js";
 
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
-const postRoutes = require("./routes/postRoutes");
-const courseRoutes = require("./routes/courseRoutes");
-const groupRoutes = require("./routes/groupRoutes");
-const videoRoutes = require("./routes/videoRoutes");
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+
+// Импорт маршрутов
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
+import courseRoutes from "./routes/courseRoutes.js";
+import groupRoutes from "./routes/groupRoutes.js";
+import videoRoutes from "./routes/videoRoutes.js";
+import { adminRouter } from "./config/admin.js";
 
 const app = express();
+app.use("/admin", adminRouter);
 
 const isProduction = process.env.NODE_ENV === "production";
 const localClient = "http://localhost:5173";
 const productionClient = "https://syscontent.kiver.net";
 const serverUrls = [isProduction ? productionClient : "http://localhost:5050"];
 
+// Настройка CORS
 app.use(
   cors({
     origin: isProduction ? productionClient : localClient,
@@ -28,9 +34,11 @@ app.use(
 );
 
 app.set("trust proxy", true);
+
+// Подключение к базе данных
 connectDB();
 
-// Swagger Configuration
+// Конфигурация Swagger
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -45,16 +53,18 @@ const swaggerOptions = {
   apis: ["./routes/*.js", "./models/*.js"],
 };
 
+// Middleware для Swagger
 app.use(
   "/api/docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerJsdoc(swaggerOptions))
 );
 
+// Парсинг тела запроса
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Регистрация маршрутов
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
@@ -62,12 +72,13 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/videos", videoRoutes);
 
-// Middleware
+// Кастомный middleware
 app.use((req, res, next) => {
   req.isProduction = isProduction;
   next();
 });
 
+// Запуск сервера
 const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => {
   console.log(

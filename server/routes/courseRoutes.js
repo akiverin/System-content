@@ -1,14 +1,14 @@
-const express = require("express");
-const router = express.Router();
-const {
-  getCourses,
-  getCourseById,
+import express from "express";
+import {
   createCourse,
   deleteCourseById,
+  getCourseById,
+  getCourses,
   updateCourseById,
-} = require("../controllers/courseController");
-const authMiddleware = require("../middleware/auth");
-const multer = require("multer");
+} from "../controllers/courseController.js";
+const router = express.Router();
+import authMiddleware from "../middleware/auth.js";
+import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
 
 /**
@@ -278,4 +278,4 @@ router.delete("/:id", authMiddleware, deleteCourseById);
  *           type: number
  */
 
-module.exports = router;
+export default router;

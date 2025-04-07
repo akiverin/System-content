@@ -1,6 +1,6 @@
-const Post = require("../models/Post");
+import Post from "../models/Post.js";
 
-exports.getPosts = async (req, res) => {
+export const getPosts = async (req, res) => {
   try {
     const posts = await Post.find().populate("author", "-password");
     res.json(posts);
@@ -9,7 +9,7 @@ exports.getPosts = async (req, res) => {
   }
 };
 
-exports.getPostById = async (req, res) => {
+export const getPostById = async (req, res) => {
   try {
     const postId = req.params.id;
     const post = await Post.findById(postId).populate("author", "-password");
@@ -22,7 +22,7 @@ exports.getPostById = async (req, res) => {
   }
 };
 
-exports.deletePostById = async (req, res) => {
+export const deletePostById = async (req, res) => {
   try {
     const postId = req.params.id;
     const post = await Post.findById(postId);
@@ -39,7 +39,7 @@ exports.deletePostById = async (req, res) => {
   }
 };
 
-exports.createPost = async (req, res) => {
+export const createPost = async (req, res) => {
   try {
     const ctx = req.body;
     const newPost = new Post({
@@ -57,7 +57,7 @@ exports.createPost = async (req, res) => {
   }
 };
 
-exports.updatePostById = async (req, res) => {
+export const updatePostById = async (req, res) => {
   try {
     const postId = req.params.id;
     const ctx = req.body;

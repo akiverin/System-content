@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
   createGroup,
   getGroups,
   getGroupById,
@@ -8,8 +8,8 @@ const {
   deleteGroupById,
   addGroupMember,
   removeGroupMember,
-} = require("../controllers/groupController");
-const authMiddleware = require("../middleware/auth");
+} from "../controllers/groupController.js";
+import authMiddleware from "../middleware/auth.js";
 
 /**
  * @swagger
@@ -235,4 +235,4 @@ router.post("/:id/members", authMiddleware, addGroupMember);
  */
 router.delete("/:id/members/:userId", authMiddleware, removeGroupMember);
 
-module.exports = router;
+export default router;

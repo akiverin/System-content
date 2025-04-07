@@ -1,15 +1,15 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const multer = require("multer");
+import multer from "multer";
 const upload = multer({ storage: multer.memoryStorage() });
-const authMiddleware = require("../middleware/auth");
-const {
+import authMiddleware from "../middleware/auth.js";
+import {
   createVideo,
   getVideos,
   getVideoById,
   updateVideoById,
   deleteVideoById,
-} = require("../controllers/videoController");
+} from "../controllers/videoController.js";
 
 /**
  * @swagger
@@ -289,4 +289,4 @@ router.delete("/:id", authMiddleware, deleteVideoById);
  *           format: date-time
  */
 
-module.exports = router;
+export default router;

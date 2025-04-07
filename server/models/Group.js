@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const GroupSchema = new mongoose.Schema({
   name: {
@@ -22,4 +22,5 @@ const GroupSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Group", GroupSchema);
+const Group = mongoose.model("Group", GroupSchema);
+export default Group;

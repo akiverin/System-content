@@ -1,13 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const {
-  getPosts,
+import express from "express";
+import {
   createPost,
+  getPosts,
   getPostById,
   deletePostById,
   updatePostById,
-} = require("../controllers/postController");
-const authMiddleware = require("../middleware/auth");
+} from "../controllers/postController.js";
+const router = express.Router();
+import authMiddleware from "../middleware/auth.js";
 
 /**
  * @swagger
@@ -150,4 +150,4 @@ router.patch("/:id", authMiddleware, updatePostById);
  */
 router.delete("/:id", authMiddleware, deletePostById);
 
-module.exports = router;
+export default router;

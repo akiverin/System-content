@@ -1,7 +1,7 @@
-const Group = require("../models/Group");
+import Group from "../models/Group.js";
 
 // Создание новой группы
-exports.createGroup = async (req, res) => {
+export const createGroup = async (req, res) => {
   try {
     const { name, members } = req.body;
 
@@ -37,7 +37,7 @@ exports.createGroup = async (req, res) => {
 };
 
 // Получение всех групп
-exports.getGroups = async (req, res) => {
+export const getGroups = async (req, res) => {
   try {
     const searchQuery = req.query.search || "";
     const page = Number(req.query.page) || 1;
@@ -66,7 +66,7 @@ exports.getGroups = async (req, res) => {
 };
 
 // Получение группы по ID
-exports.getGroupById = async (req, res) => {
+export const getGroupById = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id)
       .populate("members", "-password")
@@ -83,7 +83,7 @@ exports.getGroupById = async (req, res) => {
 };
 
 // Обновление группы
-exports.updateGroupById = async (req, res) => {
+export const updateGroupById = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id);
 
@@ -119,7 +119,7 @@ exports.updateGroupById = async (req, res) => {
 };
 
 // Удаление группы
-exports.deleteGroupById = async (req, res) => {
+export const deleteGroupById = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id);
 
@@ -145,7 +145,7 @@ exports.deleteGroupById = async (req, res) => {
 // Дополнительные методы
 
 // Добавление участника в группу
-exports.addGroupMember = async (req, res) => {
+export const addGroupMember = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id);
 
@@ -172,7 +172,7 @@ exports.addGroupMember = async (req, res) => {
 };
 
 // Удаление участника из группы
-exports.removeGroupMember = async (req, res) => {
+export const removeGroupMember = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id);
 
