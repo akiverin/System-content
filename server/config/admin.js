@@ -7,6 +7,7 @@ import Group from "../models/Group.js";
 import Post from "../models/Post.js";
 import Course from "../models/Course.js";
 import Video from "../models/Video.js";
+import Tag from "../models/Tag.js";
 
 // Регистрируем адаптер для mongoose
 AdminJS.registerAdapter(AdminJSMongoose);
@@ -55,6 +56,14 @@ const adminJs = new AdminJS({
     },
     {
       resource: Video,
+      options: {
+        properties: {
+          creator: { isVisible: false },
+        },
+      },
+    },
+    {
+      resource: Tag,
       options: {
         properties: {
           creator: { isVisible: false },

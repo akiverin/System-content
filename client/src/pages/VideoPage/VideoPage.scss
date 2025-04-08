@@ -1,0 +1,212 @@
+@use "@styles/variables" as v;
+
+.video-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+
+  &__back {
+    margin-bottom: 1.5rem;
+  }
+
+  &__back-link {
+    color: v.$auth-color;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: v.$primary-color;
+    }
+  }
+
+  &__player-container {
+    width: 100%;
+    background-color: #000;
+    margin-bottom: 1.5rem;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: v.$shadow;
+  }
+
+  &__player-wrapper {
+    width: 100%;
+    position: relative;
+    padding-top: 56.25%; /* 16:9 соотношение сторон */
+  }
+
+  &__player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: v.$shadow;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__title {
+    font-size: 1.8rem;
+    margin: 0;
+    flex: 1;
+    color: #333;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__edit-btn,
+  &__delete-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__edit-btn {
+    background-color: transparent;
+    border: 1px solid v.$border-color;
+    color: #333;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  &__delete-btn {
+    background-color: #f44336;
+    border: none;
+    color: white;
+
+    &:hover {
+      background-color: #b01d13;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__author {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  &__duration {
+    &::before {
+      content: "⏱️";
+      margin-right: 0.3rem;
+    }
+  }
+
+  &__date {
+    &::before {
+      content: "📅";
+      margin-right: 0.3rem;
+    }
+  }
+
+  &__description {
+    margin-bottom: 2rem;
+  }
+
+  &__section-title {
+    font-size: 1.2rem;
+    margin: 0 0 1rem;
+    color: #333;
+  }
+
+  &__desc-text {
+    white-space: pre-line;
+    line-height: 1.6;
+    color: #444;
+    margin: 0;
+  }
+
+  &__tags {
+    margin-top: 1.5rem;
+  }
+
+  &__tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__tag {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background-color: #f0f0f0;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    color: #333;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+
+  &__loading,
+  &__error,
+  &__not-found {
+    padding: 3rem;
+    text-align: center;
+    background-color: white;
+    border-radius: 16px;
+    margin: 2rem 0;
+    box-shadow: v.$shadow;
+  }
+
+  &__loading {
+    color: v.$auth-color;
+    font-size: 1.2rem;
+  }
+
+  &__error {
+    color: #dc3545;
+    background-color: #f8d7da;
+  }
+
+  &__not-found {
+    color: #666;
+    font-size: 1.2rem;
+  }
+}

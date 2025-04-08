@@ -25,12 +25,6 @@ const ContentItemSchema = new mongoose.Schema(
       min: 0,
       comment: "Продолжительность в минутах",
     },
-    access: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Group",
-      },
-    ],
   },
   { _id: false }
 );
@@ -46,7 +40,12 @@ const CourseSchema = new mongoose.Schema({
       message: "Курс должен содержать хотя бы один материал",
     },
   },
-  tags: { type: Array, default: [] },
+  tags: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tag",
+    },
+  ],
   access: {
     type: [
       {

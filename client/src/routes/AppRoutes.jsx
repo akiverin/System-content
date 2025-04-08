@@ -9,6 +9,8 @@ import Courses from "../pages/Courses";
 import Course from "../pages/Course";
 import Post from "../pages/Post";
 import Groups from "../pages/Groups";
+import VideoList from "../pages/VideoList";
+import VideoPage from "../pages/VideoPage";
 
 function AppRoutes() {
   return (
@@ -16,7 +18,9 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/courses" element={<Courses />} />
+      <Route path="/videos" element={<VideoList />} />
       <Route element={<PrivateRoute />}>
+        <Route path="/videos/:id" element={<VideoPage />} />
         <Route path="/courses/:id" element={<Course />} />
         <Route path="/courses/:idCourse/:id" element={<Post />} />
         <Route path="/logout" element={<Logout />} />

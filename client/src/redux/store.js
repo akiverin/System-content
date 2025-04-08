@@ -4,6 +4,7 @@ import { userReducer } from "./reducers/userReducer";
 import { postReducer } from "./reducers/postReducer";
 import { courseReducer } from "./reducers/courseReducer";
 import { groupReducer } from "./reducers/groupReducer";
+import { videoReducer } from "./reducers/videoReducer";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     post: postReducer,
     course: courseReducer,
     group: groupReducer,
+    video: videoReducer,
   },
 });
 

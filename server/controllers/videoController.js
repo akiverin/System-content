@@ -11,11 +11,16 @@ import cloudinary from "../config/cloudinary.js";
 const uploadToCloudinary = (
   fileBuffer,
   folder,
-  allowedFormats = ["mp4", "mov", "avi", "mkv"]
+  allowedFormats = ["mp4", "mov", "avi", "mkv"],
+  resourceType = "video" // Добавляем параметр типа ресурса
 ) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
-      { folder, allowed_formats: allowedFormats },
+      {
+        folder,
+        allowed_formats: allowedFormats,
+        resource_type: resourceType, // Явно указываем тип контента
+      },
       (error, result) => {
         if (error) reject(error);
         else resolve(result);
@@ -32,8 +37,10 @@ const uploadToCloudinary = (
 export const createVideo = async (req, res) => {
   try {
     const { title, desc, duration, tags, access } = req.body;
-
-    // Обработка загрузки видео файла через Cloudinary, если файл предоставлен
+    if (req.user.role !== "admin" || req.user.role !== "teacher") {
+      return res.status(403).json({ message: "Нет прав на создание видео" });
+    }
+    // Обработка загрузки видео файла через Cloudinary
     let videoUploadResult;
     if (req.files && req.files.video && req.files.video.length > 0) {
       videoUploadResult = await uploadToCloudinary(
@@ -53,21 +60,23 @@ export const createVideo = async (req, res) => {
       thumbnailUploadResult = await uploadToCloudinary(
         req.files.thumbnail[0].buffer,
         "thumbnails",
-        ["jpg", "png", "jpeg", "gif"]
+        ["jpg", "png", "jpeg", "gif"],
+        "image"
       );
     }
 
+    // Создание записи о видео в базе данных
     const newVideo = new Video({
       title,
       desc,
       videoUrl: videoUploadResult
         ? videoUploadResult.secure_url
         : req.body.videoUrl,
-      duration,
+      duration: duration || 0, // Добавляем значение по умолчанию
       tags: tags ? (Array.isArray(tags) ? tags : [tags]) : [],
-      access,
+      access: access ? (Array.isArray(access) ? access : [access]) : [],
       creator: req.user.id,
-      thumbnail: thumbnailUploadResult
+      image: thumbnailUploadResult
         ? {
             public_id: thumbnailUploadResult.public_id,
             url: thumbnailUploadResult.secure_url,
@@ -76,8 +85,16 @@ export const createVideo = async (req, res) => {
     });
 
     const savedVideo = await newVideo.save();
-    res.status(201).json(savedVideo);
+
+    // Возвращаем созданное видео с данными создателя
+    const populatedVideo = await Video.findById(savedVideo._id).populate(
+      "creator",
+      "-password"
+    );
+
+    res.status(201).json(populatedVideo);
   } catch (error) {
+    console.error("Ошибка при создании видео:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -90,13 +107,62 @@ export const getVideos = async (req, res) => {
     const searchQuery = req.query.search || "";
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
+    const filter = {};
+    let accessFilter = {};
+    let user = null;
 
-    const filter = {
-      title: { $regex: searchQuery, $options: "i" },
-    };
+    // 1. Попытка получить пользователя из токена (без блокировки запроса)
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        user = await User.findById(decoded.id).select("role");
 
-    const total = await Video.countDocuments(filter);
-    const videos = await Video.find(filter)
+        // Добавляем группы пользователя только если он не админ
+        if (user.role !== "admin") {
+          const userGroups = await Group.find({ members: user._id }).select(
+            "_id"
+          );
+          user.groupIds = userGroups.map((g) => g._id);
+        }
+      } catch (error) {
+        // Невалидный токен игнорируем, user остается null
+      }
+    }
+
+    // 2. Построение фильтра доступа
+    if (user?.role === "admin") {
+      // Администраторы видят все курсы
+    } else if (user) {
+      // Авторизованные пользователи (не админы)
+      accessFilter = {
+        $or: [
+          { access: { $size: 0 } }, // Доступ для всех
+          { access: { $in: user.groupIds } }, // Доступ по группам
+        ],
+      };
+    } else {
+      // Неавторизованные пользователи
+      accessFilter = { access: { $size: 0 } };
+    }
+
+    // 3. Добавляем поисковый фильтр
+    if (searchQuery) {
+      filter.$or = [
+        { title: { $regex: searchQuery, $options: "i" } },
+        { desc: { $regex: searchQuery, $options: "i" } },
+      ];
+    }
+
+    // 4. Объединяем фильтры
+    const finalFilter =
+      Object.keys(filter).length > 0
+        ? { $and: [filter, accessFilter] }
+        : accessFilter;
+
+    const total = await Video.countDocuments(finalFilter);
+    const videos = await Video.find(finalFilter)
       .skip((page - 1) * limit)
       .limit(limit)
       .populate("access")
@@ -124,6 +190,22 @@ export const getVideoById = async (req, res) => {
     if (!video) {
       return res.status(404).json({ message: "Видео не найдено" });
     }
+
+    // Проверка доступа
+    if (req.user.role !== "admin") {
+      // Если access не пуст - проверяем группы
+      if (video.access.length > 0) {
+        const userGroups = await Group.find({
+          _id: { $in: course.access.map((g) => g._id) },
+          members: req.user.id,
+        }).countDocuments();
+
+        if (userGroups === 0) {
+          return res.status(403).json({ message: "Доступ запрещен" });
+        }
+      }
+      // Если access пуст - доступ разрешен автоматически
+    }
     res.json(video);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -149,7 +231,7 @@ export const updateVideoById = async (req, res) => {
     // Если новый видео файл загружается, загружаем его через Cloudinary и обновляем videoUrl
     if (req.file) {
       // Если ранее видео было загружено через Cloudinary и хранится public_id, можно удалить его:
-      // if (video.videoPublicId) await cloudinary.uploader.destroy(video.videoPublicId);
+      if (video.videoUrl) await cloudinary.uploader.destroy(video.videoUrl);
       const videoUploadResult = await uploadToCloudinary(
         req.file.buffer,
         "videos",
@@ -168,7 +250,8 @@ export const updateVideoById = async (req, res) => {
       const thumbnailUploadResult = await uploadToCloudinary(
         req.files.thumbnail[0].buffer,
         "thumbnails",
-        ["jpg", "png", "jpeg", "gif"]
+        ["jpg", "png", "jpeg", "gif"],
+        "image"
       );
       req.body.thumbnail = {
         public_id: thumbnailUploadResult.public_id,

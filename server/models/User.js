@@ -15,7 +15,6 @@ const UserSchema = new mongoose.Schema({
     enum: ["student", "teacher", "admin"],
     default: "student",
   },
-  groupId: { type: Number },
 });
 
 UserSchema.pre("save", async function (next) {

@@ -32,7 +32,7 @@ function Sidebar() {
             </Link>
           </li>
           <li className="navbar__item">
-            <Link to="/" className="navbar__link">
+            <Link to="/videos" className="navbar__link">
               <VideoIcon />
               <p className="navbar__link-title">Видеоуроки</p>
             </Link>

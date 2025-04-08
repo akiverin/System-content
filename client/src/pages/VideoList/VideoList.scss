@@ -1,0 +1,143 @@
+@use "@styles/variables" as v;
+
+.video-list {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: v.$auth-color;
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__search {
+    position: relative;
+    width: 300px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  &__search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 2rem;
+    border: 1px solid v.$border-color;
+    background-color: #f0f0f0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: v.$primary-color;
+      box-shadow: 0 0 0 2px rgba(v.$primary-color, 0.2);
+    }
+  }
+
+  &__upload-btn {
+    display: flex;
+    align-items: center;
+    background-color: v.$primary-color;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken(v.$primary-color, 10%);
+    }
+
+    &::before {
+      content: "+";
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &__loading,
+  &__error,
+  &__empty {
+    padding: 2rem;
+    text-align: center;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  &__loading {
+    color: v.$auth-color;
+    font-size: 1.2rem;
+  }
+
+  &__error {
+    color: #dc3545;
+    background-color: #f8d7da;
+  }
+
+  &__empty {
+    color: #6c757d;
+    font-style: italic;
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+
+  &__page-btn {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid v.$border-color;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &--active {
+      background-color: v.$primary-color;
+      color: white;
+      border-color: v.$primary-color;
+
+      &:hover {
+        background-color: darken(v.$primary-color, 5%);
+      }
+    }
+  }
+}
