@@ -15,6 +15,7 @@ import postRoutes from "./routes/postRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
+import documentRoutes from "./routes/documentRoutes.js";
 import { adminRouter } from "./config/admin.js";
 
 const app = express();
@@ -71,6 +72,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/videos", videoRoutes);
+app.use("/api/documents", documentRoutes);
 
 // Кастомный middleware
 app.use((req, res, next) => {

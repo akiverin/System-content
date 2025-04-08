@@ -40,12 +40,7 @@ const CourseSchema = new mongoose.Schema({
       message: "Курс должен содержать хотя бы один материал",
     },
   },
-  tags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tag",
-    },
-  ],
+  tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
   access: {
     type: [
       {
@@ -61,10 +56,7 @@ const CourseSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  image: {
-    public_id: String,
-    url: String,
-  },
+  image: { public_id: String, url: String },
 });
 
 const Course = mongoose.model("Course", CourseSchema);
