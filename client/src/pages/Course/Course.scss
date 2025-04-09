@@ -1,4 +1,9 @@
 .course {
+  &__header {
+    display: flex;
+    gap: 16px;
+  }
+
   &__list {
     display: flex;
     flex-direction: column;
@@ -7,5 +12,10 @@
 
   &__item {
     text-decoration: none;
+  }
+
+  &__cover {
+    max-height: 240px;
+    border-radius: 16px;
   }
 }

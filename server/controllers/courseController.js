@@ -69,7 +69,6 @@ export const getCourses = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const count = await Course.countDocuments(finalFilter);
-
     res.json({
       totalPages: Math.ceil(count / limit),
       currentPage: page,
@@ -120,7 +119,7 @@ export const getCourseById = async (req, res) => {
 export const createCourse = async (req, res) => {
   try {
     const { title, desc, content, tags, access } = req.body;
-    let imageData = null;
+    let imageData;
     // Обработка изображения
     if (req.file) {
       const result = await new Promise((resolve, reject) => {
@@ -144,26 +143,40 @@ export const createCourse = async (req, res) => {
       };
     }
 
+    console.log(
+      title,
+      desc,
+      content,
+      tags ? tags.filter((t, i, a) => a.indexOf(t) === i).slice(0, 10) : [],
+      imageData,
+      req.user.id
+    );
+
     // Валидация и создание курса
     const newCourse = new Course({
       title,
       desc,
-      content: content.map((item) => ({
-        ...item,
-        resourceId: item.resourceId,
-        resourceType: item.resourceType,
-        order: parseInt(item.order),
-        duration: parseInt(item.duration) || 0,
-      })),
+      // content: content
+      //   ? content.map((item) => ({
+      //       ...item,
+      //       resourceId: item.resourceId,
+      //       resourceType: item.resourceType,
+      //       order: parseInt(item.order),
+      //       duration: parseInt(item.duration) || 0,
+      //     }))
+      //   : [],
       tags: tags
         ? tags.filter((t, i, a) => a.indexOf(t) === i).slice(0, 10)
-        : null,
+        : [],
       access,
-      image: imageData || null,
+      image: imageData
+        ? {
+            public_id: imageData.public_id,
+            url: imageData.url,
+          }
+        : undefined,
       creator: req.user.id,
     });
-
-    console.log(newCourse);
 
     const savedCourse = await newCourse.save();
     res.status(201).json(savedCourse);

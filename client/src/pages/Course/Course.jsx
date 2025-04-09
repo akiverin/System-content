@@ -35,11 +35,22 @@ function Course() {
       {course && !error && (
         <>
           <div className="course__header">
-            <h1 className="course__title">{course.title}</h1>
-            <p className="course__description">{course.desc}</p>
+            <div className="course__info">
+              <h1 className="course__title">{course.title}</h1>
+              <p className="course__description">{course.desc}</p>
+              {course.tags && !!course.tags.length && (
+                <div className="course-card__tags">
+                  {course.tags.map((tag, index) => (
+                    <p className="course-card__tag" key={index}>
+                      {tag.title}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
             {course.image && (
               <img
-                src={course.image}
+                src={course.image.url}
                 alt="Обложка курса"
                 className="course__cover"
               />

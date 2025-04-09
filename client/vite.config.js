@@ -1,6 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import { fileURLToPath } from "url";
+import { dirname, resolve } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -18,11 +22,12 @@ export default defineConfig({
   resolve: {
     extensions: [".jsx", ".js"],
     alias: {
-      "@": path.resolve(__dirname, "src"),
-      "@assets": path.resolve(__dirname, "src/assets"),
-      "@styles": path.resolve(__dirname, "src/styles"),
-      "@components": path.resolve(__dirname, "src/components"),
-      "@pages": path.resolve(__dirname, "src/pages"),
+      "@": resolve(__dirname, "src"),
+      "@assets": resolve(__dirname, "src/assets"),
+      "@styles": resolve(__dirname, "src/styles"),
+      "@components": resolve(__dirname, "src/components"),
+      "@pages": resolve(__dirname, "src/pages"),
+      "@redux": resolve(__dirname, "src/redux"),
     },
   },
 });

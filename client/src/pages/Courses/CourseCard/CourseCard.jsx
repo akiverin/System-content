@@ -8,7 +8,7 @@ function CourseCard(props) {
     <div className="course-card">
       {course.image ? (
         <img
-          src={course.image}
+          src={course.image.url}
           alt="Course Image"
           className="course-card__image"
         />
@@ -18,11 +18,11 @@ function CourseCard(props) {
       <div className="course-card__info">
         <p className="course-card__title">{course.title}</p>
         <p className="course-card__desc">{course.desc}</p>
-        {course.tags && (
+        {course.tags && !!course.tags.length && (
           <div className="course-card__tags">
             {course.tags.map((tag, index) => (
               <p className="course-card__tag" key={index}>
-                {tag}
+                {tag.title}
               </p>
             ))}
           </div>

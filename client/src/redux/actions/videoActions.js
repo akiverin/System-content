@@ -125,7 +125,7 @@ export const createVideo = (formData) => async (dispatch) => {
     dispatch({ type: CREATE_VIDEO_REQUEST });
     const { data } = await axios.post("/api/videos", formData, config);
     dispatch({ type: CREATE_VIDEO_SUCCESS, payload: data });
-    return data; // Возвращаем данные для возможного использования в компоненте
+    return data;
   } catch (error) {
     dispatch({
       type: CREATE_VIDEO_FAIL,
@@ -134,7 +134,7 @@ export const createVideo = (formData) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error; // Пробрасываем ошибку дальше для обработки в компоненте
+    throw error;
   }
 };
 

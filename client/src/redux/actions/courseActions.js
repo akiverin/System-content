@@ -105,27 +105,27 @@ export const patchCourse =
     }
   };
 
-export const createCourse = (props) => async (dispatch) => {
+export const createCourse = (courseData) => async (dispatch) => {
   try {
-    const userInfo = localStorage.getItem("userInfo")
-      ? JSON.parse(localStorage.getItem("userInfo"))
-      : null;
+    dispatch({ type: CREATE_COURSE_REQUEST });
+    const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
     const config = {
       headers: {
-        Authorization: userInfo ? `Bearer ${userInfo.token}` : "",
+        "Content-Type": "multipart/form-data",
+        Authorization: userInfo?.token ? `Bearer ${userInfo.token}` : "",
       },
     };
-    dispatch({ type: CREATE_COURSE_REQUEST });
-    const { data } = await axios.course(`/api/courses/`, { ...props }, config);
+
+    const { data } = await axios.post("/api/courses/", courseData, config);
+    console.log(1, data);
     dispatch({ type: CREATE_COURSE_SUCCESS, payload: data });
+    return data;
   } catch (error) {
     dispatch({
       type: CREATE_COURSE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: error.response?.data?.message || error.message,
     });
+    throw error;
   }
 };
 

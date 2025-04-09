@@ -17,7 +17,7 @@ const ContentItemSchema = new mongoose.Schema(
     resourceType: {
       type: String,
       required: true,
-      enum: ["Video", "Post", "Doc"],
+      enum: ["Video", "Post", "Document"],
       comment: "Модель связанного ресурса",
     },
     duration: {
@@ -31,14 +31,9 @@ const ContentItemSchema = new mongoose.Schema(
 
 const CourseSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  desc: { type: String, required: true },
+  desc: { type: String },
   content: {
     type: [ContentItemSchema],
-    required: true,
-    validate: {
-      validator: (v) => Array.isArray(v) && v.length > 0,
-      message: "Курс должен содержать хотя бы один материал",
-    },
   },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
   access: {

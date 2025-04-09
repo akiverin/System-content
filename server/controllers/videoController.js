@@ -37,7 +37,7 @@ const uploadToCloudinary = (
 export const createVideo = async (req, res) => {
   try {
     const { title, desc, duration, tags, access } = req.body;
-    if (req.user.role !== "admin" || req.user.role !== "teacher") {
+    if ((req.user.role !== "admin") & (req.user.role !== "teacher")) {
       return res.status(403).json({ message: "Нет прав на создание видео" });
     }
     // Обработка загрузки видео файла через Cloudinary

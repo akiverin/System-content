@@ -1,0 +1,186 @@
+@use "@styles/variables" as v;
+
+.create-course-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__content {
+    background-color: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  &__header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #666;
+
+    &:hover {
+      color: #333;
+    }
+  }
+
+  &__error {
+    margin: 1rem 1.5rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    background-color: #fee;
+    color: #f44336;
+    font-size: 0.9rem;
+  }
+
+  &__form {
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(90vh - 140px);
+  }
+
+  &__form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: v.$auth-color;
+        box-shadow: 0 0 0 2px rgba(v.$auth-color, 0.2);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  }
+
+  &__upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: v.$auth-color;
+    }
+  }
+
+  &__upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: v.$auth-color;
+
+    svg {
+      font-size: 2rem;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  &__upload-input {
+    display: none;
+  }
+
+  &__image-preview {
+    margin-top: 1rem;
+
+    img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  &__cancel {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+  }
+
+  &__save {
+    padding: 0.5rem 1rem;
+    background-color: v.$auth-color;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      background-color: darken(v.$auth-color, 10%);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+  }
+}

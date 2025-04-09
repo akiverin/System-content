@@ -5,6 +5,12 @@
     padding: 0 40px;
   }
 
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   &__title {
     margin: 20px 0 40px;
   }
@@ -13,5 +19,37 @@
     display: grid;
     gap: 12px;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+
+  &__item {
+    position: relative;
+    &:hover {
+      & .courses__delete {
+        display: flex;
+      }
+    }
+  }
+
+  &__delete {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+    z-index: 4;
+    color: #e53935;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+      color: #c62828;
+    }
   }
 }
