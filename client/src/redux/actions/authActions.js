@@ -32,13 +32,13 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 export const register =
-  (firstName, lastName, email, password, role, group) => async (dispatch) => {
+  (firstName, lastName, email, password) => async (dispatch) => {
     try {
       dispatch({ type: REGISTER_REQUEST });
       const config = { headers: { "Content-Type": "application/json" } };
       const { data } = await axios.post(
         "/api/auth/register",
-        { firstName, lastName, email, password, role, group },
+        { firstName, lastName, email, password },
         config
       );
       dispatch({ type: REGISTER_SUCCESS, payload: data });

@@ -55,12 +55,21 @@ $error-color: #e74c3c;
         font-size: 0.9rem;
       }
 
-      input,
       select {
-        padding: 0.5rem;
+        box-sizing: border-box;
         border: 1px solid #ccc;
         border-radius: 4px;
+        padding: 0.6rem 1rem;
         font-size: 1rem;
+        box-shadow: v.$shadow;
+        border-radius: 8px;
+        transition: border-color 0.3s ease;
+        border: 1px solid transparent;
+
+        &:focus {
+          outline: none;
+          border-color: v.$primary;
+        }
       }
     }
   }

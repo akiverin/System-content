@@ -36,9 +36,7 @@ function Groups() {
         <ul className="groups__list">
           {groups.groups?.map((group) => (
             <li className="groups__item" key={group._id}>
-              <Link to={`/groups/${group._id}`}>
-                <GroupCard groupName={group.name} members={group.members} />
-              </Link>
+              <GroupCard groupName={group.name} members={group.members} />
             </li>
           ))}
         </ul>

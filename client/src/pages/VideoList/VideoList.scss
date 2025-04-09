@@ -62,7 +62,7 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: darken(v.$primary-color, 10%);
+      background-color: v.$primary-color;
     }
 
     &::before {
@@ -136,7 +136,7 @@
       border-color: v.$primary-color;
 
       &:hover {
-        background-color: darken(v.$primary-color, 5%);
+        background-color: v.$primary-color;
       }
     }
   }

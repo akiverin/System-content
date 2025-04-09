@@ -30,7 +30,7 @@ const adminJs = new AdminJS({
       resource: Group,
       options: {
         properties: {
-          members: { isVisible: { list: true, edit: false, filter: false } },
+          members: { isVisible: { list: true, edit: true, filter: true } },
           createdBy: { isVisible: false },
         },
       },

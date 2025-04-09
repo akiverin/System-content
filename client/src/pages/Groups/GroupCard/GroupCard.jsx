@@ -3,8 +3,8 @@ import React from "react";
 import "./GroupCard.scss";
 
 const GroupCard = ({ groupName, members = [] }) => {
-  const visibleMembers = members.slice(0, 6);
-  const extraMembers = members.length > 6 ? members.length - 6 : 0;
+  const visibleMembers = members.slice(0, 3);
+  const extraMembers = members.length > 3 ? members.length - 3 : 0;
 
   return (
     <div className="group-card">
@@ -41,7 +41,9 @@ const GroupCard = ({ groupName, members = [] }) => {
         {extraMembers > 0 && (
           <div
             className="group-card__member-avatar group-card__member-avatar--extra"
-            style={{ left: `${visibleMembers.length * 1.2}em` }}
+            style={{
+              left: `${visibleMembers.length * 1.2}em`,
+            }}
           >
             +{extraMembers}
           </div>

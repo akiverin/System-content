@@ -175,7 +175,7 @@
     font-weight: 500;
 
     &:hover {
-      background-color: darken(v.$auth-color, 10%);
+      background-color: v.$auth-color;
     }
 
     &:disabled {

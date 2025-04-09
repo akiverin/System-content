@@ -4,15 +4,16 @@ import { login, register } from "@/redux/actions/authActions";
 import "./Auth.scss";
 import Button from "@components/Button/";
 import { useNavigate } from "react-router-dom";
+import Input from "@components/Input/";
+import { useEffect } from "react";
 
 const Auth = () => {
   const dispatch = useDispatch();
-  const authState = useSelector((state) => state.auth);
-  const { loading, error, userInfo } = authState;
   const navigate = useNavigate();
 
+  // Получаем данные авторизации из redux store
+  const { loading, error, user } = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(true);
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -22,17 +23,31 @@ const Auth = () => {
     group: "",
   });
 
+  // const userData = JSON.parse(localStorage.getItem("userInfo"));
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      navigate("/profile");
+    }
+  }, [user.isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (user.isReg) {
+      dispatch(login(formData.email, formData.password));
+    }
+  }, [user.isReg, navigate, dispatch, formData.email, formData.password]);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isLogin) {
       await dispatch(login(formData.email, formData.password));
-      navigate("/");
     } else {
-      dispatch(
+      await dispatch(
         register(
           formData.firstName,
           formData.lastName,
@@ -52,7 +67,7 @@ const Auth = () => {
           {isLogin ? "Вход в систему" : "Регистрация"}
         </h2>
         {error && <p className="error">{error}</p>}
-        {userInfo && (
+        {user.isAuthenticated && (
           <p className="success">Успешно! Пользователь авторизован.</p>
         )}
         <form className="auth__form" onSubmit={handleSubmit}>
@@ -60,8 +75,8 @@ const Auth = () => {
             <>
               <div className="form-group">
                 <label htmlFor="firstName">Имя</label>
-                <input
-                  type="text"
+                <Input
+                  placeholder="Имя"
                   id="firstName"
                   name="firstName"
                   value={formData.firstName}
@@ -69,10 +84,11 @@ const Auth = () => {
                   required
                 />
               </div>
+
               <div className="form-group">
                 <label htmlFor="lastName">Фамилия</label>
-                <input
-                  type="text"
+                <Input
+                  placeholder="Фамилия"
                   id="lastName"
                   name="lastName"
                   value={formData.lastName}
@@ -83,11 +99,12 @@ const Auth = () => {
             </>
           )}
           <div className="form-group">
-            <label htmlFor="email">Почта</label>
-            <input
-              type="email"
+            <label htmlFor="email">Email</label>
+            <Input
+              placeholder="Введите адрес электронной почты"
               id="email"
               name="email"
+              type="email"
               value={formData.email}
               onChange={handleChange}
               required
@@ -95,42 +112,16 @@ const Auth = () => {
           </div>
           <div className="form-group">
             <label htmlFor="password">Пароль</label>
-            <input
-              type="password"
+            <Input
+              placeholder="Введите пароль"
               id="password"
               name="password"
+              type="password"
               value={formData.password}
               onChange={handleChange}
               required
             />
           </div>
-          {!isLogin && (
-            <>
-              <div className="form-group">
-                <label htmlFor="role">Роль</label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                >
-                  <option value="student">Студент</option>
-                  <option value="teacher">Преподаватель</option>
-                  <option value="admin">Администратор</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="group">Группа</label>
-                <input
-                  type="text"
-                  id="group"
-                  name="group"
-                  value={formData.group}
-                  onChange={handleChange}
-                />
-              </div>
-            </>
-          )}
           <Button type="submit" disabled={loading}>
             {loading ? "Загрузка..." : isLogin ? "Войти" : "Зарегистрироваться"}
           </Button>
@@ -138,7 +129,7 @@ const Auth = () => {
         <div className="toggle">
           <p>
             {isLogin ? "Нет аккаунта?" : "Есть аккаунт?"}{" "}
-            <button onClick={() => setIsLogin(!isLogin)}>
+            <button type="button" onClick={() => setIsLogin((prev) => !prev)}>
               {isLogin ? "Зарегистрироваться" : "Войти"}
             </button>
           </p>

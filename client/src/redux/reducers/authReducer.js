@@ -31,7 +31,6 @@ export const authReducer = (state = initialState, action) => {
     case REGISTER_REQUEST:
       return { ...state, loading: true, error: null };
     case LOGIN_SUCCESS:
-    case REGISTER_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -39,6 +38,17 @@ export const authReducer = (state = initialState, action) => {
           userId: action.payload.userId,
           token: action.payload.token,
           isAuthenticated: true,
+        },
+      };
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: {
+          userId: action.payload.userId,
+          token: action.payload.token,
+          isAuthenticated: false,
+          isReg: true,
         },
       };
     case LOGIN_FAIL:
