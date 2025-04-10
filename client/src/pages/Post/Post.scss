@@ -1,0 +1,13 @@
+.post {
+  & > * {
+    overflow-wrap: break-word;
+    word-break: break-word; // fallback для других браузеров
+  }
+
+  &__back {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+  }
+}

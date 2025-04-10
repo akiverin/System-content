@@ -14,6 +14,7 @@
   &__content {
     gap: 16px;
     display: flex;
+    align-items: center;
   }
 
   &__title {
@@ -32,6 +33,10 @@
     aspect-ratio: 1 / 1;
     &--default {
       padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-height: 42px;
     }
   }
 

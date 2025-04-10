@@ -16,7 +16,14 @@ export const getPostById = async (req, res) => {
     if (!post) {
       return res.status(404).json({ message: "Пост не найден" });
     }
-    res.json(post);
+    const processedText = post.text
+      .replace(/\\r\\n/g, "\n") // Windows-style переносы
+      .replace(/\\n/g, "\n") // Экранированные переносы
+      .replace(/\r\n/g, "\n"); // Нативные переносы
+    res.json({
+      ...post.toObject(),
+      text: processedText,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

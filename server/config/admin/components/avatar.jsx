@@ -1,4 +1,4 @@
-import { Link, Avatar } from "@adminjs/design-system";
+import { Avatar } from "@adminjs/design-system";
 import React from "react";
 
 export const AvatarCell = ({ data }) => {

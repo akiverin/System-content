@@ -1,5 +1,4 @@
 import React from "react";
-import { Box } from "@adminjs/design-system";
 import { AvatarCell } from "./avatar";
 
 const ImageCellComponent = ({ record, property }) => {

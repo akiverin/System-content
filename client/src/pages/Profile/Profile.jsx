@@ -20,7 +20,6 @@ const Profile = () => {
       firstName: profile?.firstName || "",
       lastName: profile?.lastName || "",
       email: profile?.email || "",
-      group: profile?.group || "",
       image: null,
     }),
     [profile]
@@ -66,7 +65,6 @@ const Profile = () => {
               firstName: formData.firstName,
               lastName: formData.lastName,
               email: formData.email,
-              group: formData.group,
             },
             formData.image
           )
@@ -113,7 +111,6 @@ const Profile = () => {
             { label: "Имя:", value: profile?.firstName },
             { label: "Фамилия:", value: profile?.lastName },
             { label: "Email:", value: profile?.email },
-            { label: "Группа:", value: profile?.group || "Не назначена" },
             {
               label: "Роль:",
               value:

@@ -64,6 +64,7 @@ export const getCourses = async (req, res) => {
     // 5. Выполнение запроса
     const courses = await Course.find(finalFilter)
       .populate("creator", "-password")
+      .populate("tags")
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ createdAt: -1 });
@@ -84,10 +85,10 @@ export const getCourseById = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id)
       .populate("creator", "-password")
+      .populate("tags")
       .populate({
         path: "content.resourceId",
-        select: "title duration", // Пример полей для связанных ресурсов
-        // options: { sort: { order: 1 } },
+        select: "title duration desc",
       });
 
     if (!course) {

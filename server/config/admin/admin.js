@@ -138,6 +138,10 @@ const adminJs = new AdminJS({
         properties: {
           content: { isVisible: { list: true, edit: true, filter: false } },
           creator: { isVisible: false },
+          text: {
+            type: "richtext",
+            isVisible: { list: false, show: true, edit: true, filter: false },
+          },
           "image.url": {
             isVisible: { list: false, show: false, edit: true },
           },
@@ -157,7 +161,7 @@ const adminJs = new AdminJS({
         properties: {
           creator: { isVisible: false },
           _id: {
-            isVisible: { list: false, show: false, edit: true },
+            isVisible: { list: false, show: true, edit: true },
           },
           "image.url": {
             isVisible: { list: false, show: false, edit: true },

@@ -14,18 +14,72 @@ function Course() {
     dispatch(getCourse(id));
   }, [dispatch, id]);
 
-  // Фильтруем только посты и преобразуем данные для PostCard
-  const coursePosts =
-    course?.content
-      ?.filter((item) => item.resourceType === "Post")
-      .map((post) => ({
-        _id: post.resourceId._id,
-        title: post.resourceId.title,
-        desc: post.resourceId.desc,
-        tags: post.resourceId.tags,
-        image: post.resourceId.image,
-        createdAt: post.resourceId.createdAt,
-      })) || [];
+  // Функция для рендера каждого типа контента
+  const renderContentItem = (item) => {
+    const { resourceType, resourceId } = item;
+    switch (resourceType) {
+      case "Post":
+        return (
+          <li className="course__item" key={resourceId._id}>
+            <Link to={`/courses/${course._id}/${resourceId._id}`}>
+              <PostCard
+                post={{
+                  _id: resourceId._id,
+                  type: "post",
+                  title: resourceId.title,
+                  desc: resourceId.desc,
+                }}
+              />
+            </Link>
+          </li>
+        );
+
+      case "Video":
+        return (
+          <li className="course__item" key={resourceId._id}>
+            <Link to={`/videos/${resourceId._id}`}>
+              <PostCard
+                post={{
+                  _id: resourceId._id,
+                  type: "video",
+                  title: resourceId.title,
+                  desc: resourceId.desc,
+                }}
+              />
+            </Link>
+          </li>
+        );
+
+      case "Document":
+        return (
+          <li className="course__item" key={resourceId._id}>
+            {/* Для документа используем обычное <a>, так как ссылка ведет на внешний URL */}
+            <a
+              href={resourceId.fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <PostCard
+                post={{
+                  _id: resourceId._id,
+                  type: "document",
+                  title: resourceId.title,
+                  desc: resourceId.desc,
+                }}
+              />
+            </a>
+          </li>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  // Сортировка контента по порядку (order)
+  const sortedContent = course?.content
+    ? [...course.content].sort((a, b) => a.order - b.order)
+    : [];
 
   return (
     <div className="course">
@@ -38,7 +92,7 @@ function Course() {
             <div className="course__info">
               <h1 className="course__title">{course.title}</h1>
               <p className="course__description">{course.desc}</p>
-              {course.tags && !!course.tags.length && (
+              {course.tags && course.tags.length > 0 && (
                 <div className="course-card__tags">
                   {course.tags.map((tag, index) => (
                     <p className="course-card__tag" key={index}>
@@ -59,13 +113,7 @@ function Course() {
 
           <h2 className="course__subtitle">Материалы курса</h2>
           <ul className="course__list">
-            {coursePosts.map((post) => (
-              <li className="course__item" key={post._id}>
-                <Link to={`/courses/${course._id}/${post._id}`}>
-                  <PostCard post={post} />
-                </Link>
-              </li>
-            ))}
+            {sortedContent.map((item) => renderContentItem(item))}
           </ul>
         </>
       )}
