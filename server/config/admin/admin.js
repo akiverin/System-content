@@ -28,7 +28,7 @@ const courseResourceOptions = {
       creator: {
         isVisible: {
           list: false,
-          edit: false,
+          edit: true,
           filter: true,
           show: true,
         },
@@ -36,7 +36,7 @@ const courseResourceOptions = {
       "image.url": {
         isVisible: { list: false, show: false, edit: true },
       },
-      "image.public.id": {
+      "image.public_id": {
         isVisible: { list: false, show: false, edit: true },
       },
       image: {
@@ -133,7 +133,7 @@ const adminJs = new AdminJS({
       resource: Post,
       options: {
         navigation: {
-          icon: "File",
+          icon: "Edit",
         },
         properties: {
           content: { isVisible: { list: true, edit: true, filter: false } },
@@ -204,7 +204,7 @@ const adminJs = new AdminJS({
       resource: Document,
       options: {
         navigation: {
-          icon: "Attachment",
+          icon: "File",
         },
         properties: {
           creator: { isVisible: false },
@@ -267,5 +267,20 @@ const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
     saveUninitialized: true,
   }
 );
+
+adminRouter.get("/api/dashboard-stats", async (req, res) => {
+  try {
+    const [users, groups, posts, courses] = await Promise.all([
+      User.countDocuments(),
+      Group.countDocuments(),
+      Post.countDocuments(),
+      Course.countDocuments(),
+    ]);
+    res.json({ users, groups, posts, courses });
+  } catch (error) {
+    console.error("Ошибка в dashboard-stats:", error);
+    res.status(500).json({ error: "Ошибка при получении статистики" });
+  }
+});
 
 export { adminJs, adminRouter };
