@@ -115,9 +115,7 @@ export const createCourse = (courseData) => async (dispatch) => {
         Authorization: userInfo?.token ? `Bearer ${userInfo.token}` : "",
       },
     };
-
     const { data } = await axios.post("/api/courses/", courseData, config);
-    console.log(1, data);
     dispatch({ type: CREATE_COURSE_SUCCESS, payload: data });
     return data;
   } catch (error) {

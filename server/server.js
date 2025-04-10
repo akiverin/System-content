@@ -16,7 +16,7 @@ import courseRoutes from "./routes/courseRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import documentRoutes from "./routes/documentRoutes.js";
-import { adminRouter } from "./config/admin.js";
+import { adminRouter } from "./config/admin/admin.js";
 
 const app = express();
 app.use("/admin", adminRouter);

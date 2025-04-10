@@ -1,7 +1,1 @@
-(function () {
-	'use strict';
-
-	AdminJS.UserComponents = {};
-
-})();
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnVuZGxlLmpzIiwic291cmNlcyI6WyJlbnRyeS5qcyJdLCJzb3VyY2VzQ29udGVudCI6WyJBZG1pbkpTLlVzZXJDb21wb25lbnRzID0ge31cbiJdLCJuYW1lcyI6WyJBZG1pbkpTIiwiVXNlckNvbXBvbmVudHMiXSwibWFwcGluZ3MiOiI7OztDQUFBQSxPQUFPLENBQUNDLGNBQWMsR0FBRyxFQUFFOzs7Ozs7In0=
+(function(n,l){"use strict";function r(e){return e&&e.__esModule?e:{default:e}}var t=r(n);const a=()=>t.default.createElement("p",null,"123"),m=({data:e})=>(console.log(e),t.default.createElement("div",{style:{display:"flex",flexDirection:"column",gap:"1rem",width:"fit-content",minWidth:"30%",maxWidth:"500px"}},t.default.createElement(l.Avatar,{alt:e.firstName&&e.lastName?e.firstName.charAt(0)+e.lastName.charAt(0):"",src:e["image.url"]},e.firstName&&e.lastName?e.firstName.charAt(0)+e.lastName.charAt(0):""))),s=({record:e,property:o})=>(console.log(1,o,e),t.default.createElement(m,{data:e.params}));AdminJS.UserComponents={},AdminJS.UserComponents.Dashboard=a,AdminJS.UserComponents.ImageCell=s})(React,AdminJSDesignSystem);

@@ -27,11 +27,6 @@ export const updateUser = async (req, res) => {
     const user = await User.findById(userId);
     if (!user)
       return res.status(404).json({ message: "Пользователь не найден" });
-    console.log("Cloudinary Config:", {
-      cloud: process.env.CLOUDINARY_CLOUD_NAME,
-      key: process.env.CLOUDINARY_API_KEY ? "exists" : "missing",
-      secret: process.env.CLOUDINARY_API_SECRET ? "exists" : "missing",
-    });
     // Обработка аватара
     if (req.file) {
       // Удаление старого изображения
