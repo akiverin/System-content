@@ -104,7 +104,7 @@ const adminJs = new AdminJS({
           "image.url": {
             isVisible: { list: false, show: false, edit: true },
           },
-          "image.public.id": {
+          "image.public_id": {
             isVisible: { list: false, show: false, edit: true },
           },
           role: {
@@ -145,7 +145,7 @@ const adminJs = new AdminJS({
           "image.url": {
             isVisible: { list: false, show: false, edit: true },
           },
-          "image.public.id": {
+          "image.public_id": {
             isVisible: { list: false, show: false, edit: true },
           },
         },

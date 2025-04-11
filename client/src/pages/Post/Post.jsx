@@ -42,7 +42,7 @@ function Post() {
               ← Вернуться назад
             </button>
             <h1 className="post__title">{post.title}</h1>
-            {post.image && (
+            {post.image?.public_id && (
               <img
                 src={post.image}
                 alt="Обложка поста"

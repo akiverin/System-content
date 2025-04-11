@@ -13,21 +13,21 @@ function Course() {
   useEffect(() => {
     dispatch(getCourse(id));
   }, [dispatch, id]);
+  console.log(course);
 
   // Функция для рендера каждого типа контента
   const renderContentItem = (item) => {
-    const { resourceType, resourceId } = item;
-    switch (resourceType) {
+    switch (item.resourceType) {
       case "Post":
         return (
-          <li className="course__item" key={resourceId._id}>
-            <Link to={`/courses/${course._id}/${resourceId._id}`}>
+          <li className="course__item" key={item._id}>
+            <Link to={`/courses/${course._id}/${item._id}`}>
               <PostCard
                 post={{
-                  _id: resourceId._id,
+                  _id: item._id,
                   type: "post",
-                  title: resourceId.title,
-                  desc: resourceId.desc,
+                  title: item.title,
+                  desc: item.desc,
                 }}
               />
             </Link>
@@ -36,14 +36,14 @@ function Course() {
 
       case "Video":
         return (
-          <li className="course__item" key={resourceId._id}>
-            <Link to={`/videos/${resourceId._id}`}>
+          <li className="course__item" key={item._id}>
+            <Link to={`/videos/${item._id}`}>
               <PostCard
                 post={{
-                  _id: resourceId._id,
+                  _id: item._id,
                   type: "video",
-                  title: resourceId.title,
-                  desc: resourceId.desc,
+                  title: item.title,
+                  desc: item.desc,
                 }}
               />
             </Link>
@@ -52,19 +52,15 @@ function Course() {
 
       case "Document":
         return (
-          <li className="course__item" key={resourceId._id}>
+          <li className="course__item" key={item._id}>
             {/* Для документа используем обычное <a>, так как ссылка ведет на внешний URL */}
-            <a
-              href={resourceId.fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={item.fileUrl} target="_blank" rel="noopener noreferrer">
               <PostCard
                 post={{
-                  _id: resourceId._id,
+                  _id: item._id,
                   type: "document",
-                  title: resourceId.title,
-                  desc: resourceId.desc,
+                  title: item.title,
+                  desc: item.desc,
                 }}
               />
             </a>

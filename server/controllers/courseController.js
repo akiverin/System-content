@@ -88,11 +88,7 @@ export const getCourseById = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id)
       .populate("creator", "-password")
-      .populate("tags")
-      .populate({
-        path: "content.resourceId",
-        select: "title duration desc",
-      });
+      .populate("tags");
 
     if (!course) {
       return res.status(404).json({ message: "Курс не найден" });
@@ -113,18 +109,21 @@ export const getCourseById = async (req, res) => {
       }
       // Если access пуст - доступ разрешен автоматически
     }
+    console.log(course);
+
     // Параллельное получение связанных материалов (с проверкой, что поле course совпадает с courseId)
     const [videos, posts, documents] = await Promise.all([
-      Video.find({ course: courseId })
+      Video.find({ course: course.id })
         .select("title desc duration courseOrder")
         .lean(),
-      Post.find({ course: courseId })
+      Post.find({ course: course.id })
         .select("title desc text courseOrder")
         .lean(),
-      Document.find({ course: courseId })
+      Document.find({ course: course.id })
         .select("title desc fileUrl format courseOrder")
         .lean(),
     ]);
+    console.log(posts);
 
     // Добавляем к каждому объекту тип ресурса для дальнейшей идентификации
     const formattedVideos = videos.map((item) => ({
