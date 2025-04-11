@@ -3,6 +3,9 @@ import Group from "../models/Group.js";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import cloudinary from "../config/cloudinary.js";
+import Video from "../models/Video.js";
+import Post from "../models/Post.js";
+import Document from "../models/Document.js";
 
 export const getCourses = async (req, res) => {
   try {
@@ -110,7 +113,52 @@ export const getCourseById = async (req, res) => {
       }
       // Если access пуст - доступ разрешен автоматически
     }
-    res.json(course);
+    // Параллельное получение связанных материалов (с проверкой, что поле course совпадает с courseId)
+    const [videos, posts, documents] = await Promise.all([
+      Video.find({ course: courseId })
+        .select("title desc duration courseOrder")
+        .lean(),
+      Post.find({ course: courseId })
+        .select("title desc text courseOrder")
+        .lean(),
+      Document.find({ course: courseId })
+        .select("title desc fileUrl format courseOrder")
+        .lean(),
+    ]);
+
+    // Добавляем к каждому объекту тип ресурса для дальнейшей идентификации
+    const formattedVideos = videos.map((item) => ({
+      ...item,
+      resourceType: "Video",
+    }));
+    const formattedPosts = posts.map((item) => ({
+      ...item,
+      resourceType: "Post",
+    }));
+    const formattedDocuments = documents.map((item) => ({
+      ...item,
+      resourceType: "Document",
+    }));
+
+    // Объединяем все материалы в один массив
+    let content = [
+      ...formattedVideos,
+      ...formattedPosts,
+      ...formattedDocuments,
+    ];
+
+    // Сортировка по полю courseOrder (если курс привязан, то это значение должно быть числом, иначе — помещается в конец)
+    content.sort((a, b) => {
+      const orderA = a.courseOrder || Number.MAX_SAFE_INTEGER;
+      const orderB = b.courseOrder || Number.MAX_SAFE_INTEGER;
+      return orderA - orderB;
+    });
+
+    // Для вывода добавляем новое поле content, не влияющее на данные в БД
+    const courseObj = course.toObject();
+    courseObj.content = content;
+
+    res.json(courseObj);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
