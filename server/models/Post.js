@@ -20,6 +20,18 @@ const PostSchema = new mongoose.Schema({
     public_id: String,
     url: String,
   },
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+    default: null,
+    comment: "Курс, к которому относится видео (не обязательное)",
+  },
+  courseOrder: {
+    type: Number,
+    min: 1,
+    default: null,
+    comment: "Порядок видео в курсе, задаваемый администратором",
+  },
 });
 
 const Post = mongoose.model("Post", PostSchema);

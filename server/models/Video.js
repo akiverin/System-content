@@ -40,6 +40,18 @@ const VideoSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      default: null,
+      comment: "Курс, к которому относится видео (не обязательное)",
+    },
+    courseOrder: {
+      type: Number,
+      min: 1,
+      default: null,
+      comment: "Порядок видео в курсе, задаваемый администратором",
+    },
   },
   { timestamps: true }
 );

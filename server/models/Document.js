@@ -3,13 +3,19 @@ import mongoose from "mongoose";
 const DocumentSchema = new mongoose.Schema(
   {
     title: {
-      type: String, required: true, comment: "Название документа",
+      type: String,
+      required: true,
+      comment: "Название документа",
     },
     desc: {
-      type: String, required: true, comment: "Краткое описание документа",
+      type: String,
+      required: true,
+      comment: "Краткое описание документа",
     },
     fileUrl: {
-      type: String, required: true, comment: "Ссылка на файл документа",
+      type: String,
+      required: true,
+      comment: "Ссылка на файл документа",
     },
     format: {
       type: String,
@@ -30,6 +36,18 @@ const DocumentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      default: null,
+      comment: "Курс, к которому относится видео (не обязательное)",
+    },
+    courseOrder: {
+      type: Number,
+      min: 1,
+      default: null,
+      comment: "Порядок видео в курсе, задаваемый администратором",
     },
   },
   {

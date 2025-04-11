@@ -1,40 +1,8 @@
 import mongoose from "mongoose";
 
-const ContentItemSchema = new mongoose.Schema(
-  {
-    order: {
-      type: Number,
-      required: true,
-      min: 1,
-      comment: "Порядковый номер материала в курсе",
-    },
-    resourceId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      refPath: "content.resourceType",
-      comment: "Ссылка на конкретный ресурс",
-    },
-    resourceType: {
-      type: String,
-      required: true,
-      enum: ["Video", "Post", "Document"],
-      comment: "Модель связанного ресурса",
-    },
-    duration: {
-      type: Number,
-      min: 0,
-      comment: "Продолжительность в минутах",
-    },
-  },
-  { _id: false }
-);
-
 const CourseSchema = new mongoose.Schema({
   title: { type: String, required: true },
   desc: { type: String },
-  content: {
-    type: [ContentItemSchema],
-  },
   tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
   access: {
     type: [
