@@ -9,6 +9,7 @@ import {
   getVideoById,
   updateVideoById,
   deleteVideoById,
+  uploadVideoFile,
 } from "../controllers/videoController.js";
 
 /**
@@ -246,6 +247,12 @@ router.patch(
  *         description: Ошибка сервера
  */
 router.delete("/:id", authMiddleware, deleteVideoById);
+
+router.post(
+  "/upload-video",
+  upload.fields([{ name: "video" }]),
+  uploadVideoFile
+);
 
 /**
  * @swagger

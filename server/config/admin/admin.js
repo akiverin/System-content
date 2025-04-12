@@ -159,19 +159,32 @@ const adminJs = new AdminJS({
           icon: "Video",
         },
         properties: {
-          creator: { isVisible: false },
           _id: {
-            isVisible: { list: false, show: true, edit: true },
+            isVisible: { list: false, show: false, edit: false },
           },
           "image.url": {
             isVisible: { list: false, show: false, edit: true },
+            components: {
+              edit: Components.ImageUpload,
+              list: Components.ImageUpload,
+            },
+            custom: {
+              folder: "thumbnails",
+            },
           },
           "image.public_id": {
-            isVisible: { list: false, show: false, edit: true },
+            isVisible: { list: false, show: false, edit: false },
           },
           videoUrl: {
             isVisible: { list: false, show: false, edit: true },
+            components: {
+              edit: Components.VideoUpload,
+              list: Components.VideoUpload,
+            },
           },
+          createdAt: { list: false, show: true, edit: true },
+          updatedAt: { list: false, show: true, edit: true },
+          creator: { list: false, show: true, edit: true },
         },
         actions: {
           list: {
@@ -282,5 +295,4 @@ adminRouter.get("/api/dashboard-stats", async (req, res) => {
     res.status(500).json({ error: "Ошибка при получении статистики" });
   }
 });
-
 export { adminJs, adminRouter };

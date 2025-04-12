@@ -1,41 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getVideo, deleteVideo } from "@/redux/actions/videoActions";
+import { getVideo } from "@/redux/actions/videoActions";
 import { formatDuration, formatDate } from "@/utils/formatters";
-import Button from "@/components/Button";
-import Modal from "@/components/Modal";
-import VideoUploadForm from "../VideoList/VideoUploadForm";
 import "./VideoPage.scss";
 
 const VideoPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { video, loading, error } = useSelector((state) => state.video);
-  const { user } = useSelector((state) => state.auth);
-  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     if (id) {
       dispatch(getVideo(id));
     }
   }, [dispatch, id]);
-
-  const handleDelete = () => {
-    if (window.confirm("Вы уверены, что хотите удалить это видео?")) {
-      dispatch(deleteVideo(id));
-      // После успешного удаления перенаправляем на страницу списка видео
-      window.location.href = "/videos";
-    }
-  };
-
-  const handleEditSuccess = () => {
-    setShowEditModal(false);
-    dispatch(getVideo(id)); // Обновляем данные видео
-  };
-
-  const isCreator = user && video && user.id === video.creator?._id;
-  const isAdmin = user && user.role === "admin";
 
   if (loading)
     return <div className="video-page__loading">Загрузка видео...</div>;
@@ -65,25 +44,6 @@ const VideoPage = () => {
       <div className="video-page__content">
         <div className="video-page__header">
           <h1 className="video-page__title">{video.title}</h1>
-
-          {(isCreator || isAdmin) && (
-            <div className="video-page__actions">
-              <Button
-                variant="outline"
-                className="video-page__edit-btn"
-                onClick={() => setShowEditModal(true)}
-              >
-                Редактировать
-              </Button>
-              <Button
-                variant="danger"
-                className="video-page__delete-btn"
-                onClick={handleDelete}
-              >
-                Удалить
-              </Button>
-            </div>
-          )}
         </div>
 
         <div className="video-page__meta">
@@ -113,27 +73,13 @@ const VideoPage = () => {
             <div className="video-page__tags-list">
               {video.tags.map((tag, index) => (
                 <span key={index} className="video-page__tag">
-                  {tag}
+                  {tag.title}
                 </span>
               ))}
             </div>
           </div>
         )}
       </div>
-
-      {showEditModal && (
-        <Modal
-          isOpen={true}
-          onClose={() => setShowEditModal(false)}
-          title="Редактирование видео"
-        >
-          <VideoUploadForm
-            isEdit={true}
-            videoData={video}
-            onSuccess={handleEditSuccess}
-          />
-        </Modal>
-      )}
     </div>
   );
 };

@@ -4,7 +4,6 @@ import "./CourseCard.scss";
 
 function CourseCard(props) {
   const course = props.course;
-  console.log(course);
   return (
     <div className="course-card">
       {course.image ? (

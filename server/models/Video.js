@@ -12,6 +12,7 @@ const VideoSchema = new mongoose.Schema(
     },
     videoUrl: {
       type: String,
+      default: "",
       required: true,
     },
     image: {
@@ -23,7 +24,7 @@ const VideoSchema = new mongoose.Schema(
       min: 0,
     },
     tags: {
-      type: [String],
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
       default: [],
     },
     access: {

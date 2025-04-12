@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllVideos, deleteVideo } from "@/redux/actions/videoActions";
-// import { formatDuration } from "@/utils/formatters";
+import { getAllVideos } from "@/redux/actions/videoActions";
 import Button from "@components/Button";
-import Modal from "@components/Modal";
 import VideoCard from "./VideoCard";
-import VideoUploadForm from "./VideoUploadForm";
 import "./VideoList.scss";
 
 const VideoList = () => {
@@ -15,7 +12,6 @@ const VideoList = () => {
     loading,
     error,
   } = useSelector((state) => state.video);
-  const [showUploadModal, setShowUploadModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredVideos, setFilteredVideos] = useState([]);
 
@@ -44,20 +40,6 @@ const VideoList = () => {
     setSearchQuery(e.target.value);
   }, []);
 
-  const handleVideoDelete = useCallback(
-    (videoId) => {
-      if (window.confirm("Вы уверены, что хотите удалить видео?")) {
-        dispatch(deleteVideo(videoId));
-      }
-    },
-    [dispatch]
-  );
-
-  const handleUploadSuccess = useCallback(() => {
-    setShowUploadModal(false);
-    dispatch(getAllVideos()); // Обновляем список после загрузки нового видео
-  }, [dispatch]);
-
   return (
     <div className="video-list">
       <div className="video-list__header">
@@ -72,12 +54,6 @@ const VideoList = () => {
               className="video-list__search-input"
             />
           </div>
-          <Button
-            className="video-list__upload-btn"
-            onClick={() => setShowUploadModal(true)}
-          >
-            Добавить видео
-          </Button>
         </div>
       </div>
 
@@ -92,11 +68,7 @@ const VideoList = () => {
       ) : (
         <div className="video-list__grid">
           {filteredVideos.map((video) => (
-            <VideoCard
-              key={video._id}
-              video={video}
-              onDelete={() => handleVideoDelete(video._id)}
-            />
+            <VideoCard key={video._id} video={video} />
           ))}
         </div>
       )}
@@ -118,17 +90,6 @@ const VideoList = () => {
             </Button>
           ))}
         </div>
-      )}
-
-      {/* Модальное окно для загрузки видео */}
-      {showUploadModal && (
-        <Modal
-          isOpen={true}
-          onClose={() => setShowUploadModal(false)}
-          title="Добавление нового видео"
-        >
-          <VideoUploadForm onSuccess={handleUploadSuccess} />
-        </Modal>
       )}
     </div>
   );

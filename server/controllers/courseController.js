@@ -109,7 +109,6 @@ export const getCourseById = async (req, res) => {
       }
       // Если access пуст - доступ разрешен автоматически
     }
-    console.log(course);
 
     // Параллельное получение связанных материалов (с проверкой, что поле course совпадает с courseId)
     const [videos, posts, documents] = await Promise.all([
@@ -123,7 +122,6 @@ export const getCourseById = async (req, res) => {
         .select("title desc fileUrl format courseOrder")
         .lean(),
     ]);
-    console.log(posts);
 
     // Добавляем к каждому объекту тип ресурса для дальнейшей идентификации
     const formattedVideos = videos.map((item) => ({
@@ -191,28 +189,10 @@ export const createCourse = async (req, res) => {
       };
     }
 
-    console.log(
-      title,
-      desc,
-      content,
-      tags ? tags.filter((t, i, a) => a.indexOf(t) === i).slice(0, 10) : [],
-      imageData,
-      req.user.id
-    );
-
     // Валидация и создание курса
     const newCourse = new Course({
       title,
       desc,
-      // content: content
-      //   ? content.map((item) => ({
-      //       ...item,
-      //       resourceId: item.resourceId,
-      //       resourceType: item.resourceType,
-      //       order: parseInt(item.order),
-      //       duration: parseInt(item.duration) || 0,
-      //     }))
-      //   : [],
       tags: tags
         ? tags.filter((t, i, a) => a.indexOf(t) === i).slice(0, 10)
         : [],

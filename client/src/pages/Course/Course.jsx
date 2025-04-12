@@ -13,7 +13,6 @@ function Course() {
   useEffect(() => {
     dispatch(getCourse(id));
   }, [dispatch, id]);
-  console.log(course);
 
   // Функция для рендера каждого типа контента
   const renderContentItem = (item) => {

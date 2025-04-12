@@ -2,8 +2,6 @@ import { Avatar } from "@adminjs/design-system";
 import React from "react";
 
 export const AvatarCell = ({ data }) => {
-  console.log(data);
-
   return (
     <div
       style={{

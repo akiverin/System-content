@@ -186,7 +186,8 @@ export const getVideoById = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id)
       .populate("access")
-      .populate("creator", "-password");
+      .populate("creator", "-password")
+      .populate("tags", "title");
     if (!video) {
       return res.status(404).json({ message: "Видео не найдено" });
     }
@@ -308,6 +309,20 @@ export const deleteVideoById = async (req, res) => {
     await video.deleteOne();
     res.json({ message: "Видео успешно удалено" });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const uploadVideoFile = async (req, res) => {
+  try {
+    if (!req.files || !req.files.video) {
+      return res.status(400).json({ message: "Файл видео не выбран" });
+    }
+    const fileBuffer = req.files.video[0].buffer;
+    const uploadResult = await uploadToCloudinary(fileBuffer, "videos");
+    res.json({ secure_url: uploadResult.secure_url });
+  } catch (error) {
+    console.error("Ошибка загрузки видео:", error);
     res.status(500).json({ error: error.message });
   }
 };
