@@ -1,11 +1,12 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import Session from "../models/Session.js";
 
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "1d" }
+    { expiresIn: "7d" }
   );
 };
 
@@ -42,6 +43,13 @@ export const login = async (req, res) => {
     }
 
     const token = generateToken(user);
+    await Session.create({
+      user: user._id,
+      token,
+      ip: req.ip,
+      userAgent: req.headers["user-agent"],
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
     res.json({ token, userId: user._id });
   } catch (error) {
     res.status(500).json({ error: error.message });

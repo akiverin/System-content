@@ -1,5 +1,8 @@
 import Video from "../models/Video.js";
 import cloudinary from "../config/cloudinary.js";
+import User from "../models/User.js";
+import Group from "../models/Group.js";
+import jwt from "jsonwebtoken";
 
 /**
  * Helper: Загружает файл в Cloudinary с использованием upload_stream.
@@ -117,6 +120,7 @@ export const getVideos = async (req, res) => {
       const token = authHeader.split(" ")[1];
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
         user = await User.findById(decoded.id).select("role");
 
         // Добавляем группы пользователя только если он не админ
@@ -133,7 +137,7 @@ export const getVideos = async (req, res) => {
 
     // 2. Построение фильтра доступа
     if (user?.role === "admin") {
-      // Администраторы видят все курсы
+      // Администраторы видят все видео
     } else if (user) {
       // Авторизованные пользователи (не админы)
       accessFilter = {
@@ -191,13 +195,12 @@ export const getVideoById = async (req, res) => {
     if (!video) {
       return res.status(404).json({ message: "Видео не найдено" });
     }
-
     // Проверка доступа
     if (req.user.role !== "admin") {
       // Если access не пуст - проверяем группы
       if (video.access.length > 0) {
         const userGroups = await Group.find({
-          _id: { $in: course.access.map((g) => g._id) },
+          _id: { $in: video.access.map((g) => g._id) },
           members: req.user.id,
         }).countDocuments();
 

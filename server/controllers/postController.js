@@ -12,18 +12,12 @@ export const getPosts = async (req, res) => {
 export const getPostById = async (req, res) => {
   try {
     const postId = req.params.id;
-    const post = await Post.findById(postId).populate("author", "-password");
+    const post = await Post.findById(postId).populate("creator", "-password");
     if (!post) {
       return res.status(404).json({ message: "Пост не найден" });
     }
-    const processedText = post.text
-      .replace(/\\r\\n/g, "\n") // Windows-style переносы
-      .replace(/\\n/g, "\n") // Экранированные переносы
-      .replace(/\r\n/g, "\n"); // Нативные переносы
-    res.json({
-      ...post.toObject(),
-      text: processedText,
-    });
+
+    res.json(post);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

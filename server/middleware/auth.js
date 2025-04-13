@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import Session from "../models/Session.js";
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -13,6 +14,11 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const session = await Session.findOne({ token, revoked: false });
+
+    if (!session)
+      return res.status(401).json({ message: "Сессия недействительна" });
+
     req.user = decoded;
     next();
   } catch (error) {

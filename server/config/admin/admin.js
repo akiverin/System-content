@@ -11,10 +11,40 @@ import Tag from "../../models/Tag.js";
 import Document from "../../models/Document.js";
 import dotenv from "dotenv";
 import { componentLoader, Components } from "./components/index.js";
+import Session from "../../models/Session.js";
 
 dotenv.config();
 
 AdminJS.registerAdapter(AdminJSMongoose);
+
+const teacherActions = {
+  list: {
+    isAccessible: ({ currentAdmin }) => {
+      return currentAdmin && currentAdmin.role !== "student";
+    },
+  },
+  edit: {
+    isAccessible: ({ currentAdmin, record }) => {
+      return (
+        currentAdmin &&
+        (currentAdmin.role === "admin" ||
+          record.params.creator === currentAdmin._id.toString())
+      );
+    },
+  },
+  delete: {
+    isAccessible: ({ currentAdmin, record }) => {
+      return (
+        currentAdmin &&
+        (currentAdmin.role === "admin" ||
+          record.params.creator === currentAdmin._id.toString())
+      );
+    },
+  },
+  new: {
+    isAccessible: ({ currentAdmin }) => currentAdmin.role !== "student",
+  },
+};
 
 // Функция для проверки доступа к курсам
 const courseResourceOptions = {
@@ -56,34 +86,7 @@ const courseResourceOptions = {
         },
       },
     },
-    actions: {
-      list: {
-        isAccessible: ({ currentAdmin }) => {
-          return currentAdmin && currentAdmin.role !== "student";
-        },
-      },
-      edit: {
-        isAccessible: ({ currentAdmin, record }) => {
-          return (
-            currentAdmin &&
-            (currentAdmin.role === "admin" ||
-              record.params.creator === currentAdmin._id.toString())
-          );
-        },
-      },
-      delete: {
-        isAccessible: ({ currentAdmin, record }) => {
-          return (
-            currentAdmin &&
-            (currentAdmin.role === "admin" ||
-              record.params.creator === currentAdmin._id.toString())
-          );
-        },
-      },
-      new: {
-        isAccessible: ({ currentAdmin }) => currentAdmin.role !== "student",
-      },
-    },
+    actions: teacherActions,
   },
 };
 
@@ -131,6 +134,26 @@ const adminJs = new AdminJS({
             ],
           },
         },
+        actions: {
+          list: {
+            isAccessible: ({ currentAdmin }) => {
+              return currentAdmin && currentAdmin.role !== "student";
+            },
+          },
+          edit: {
+            isAccessible: ({ currentAdmin }) => {
+              return currentAdmin && currentAdmin.role === "admin";
+            },
+          },
+          delete: {
+            isAccessible: ({ currentAdmin }) => {
+              return currentAdmin && currentAdmin.role === "admin";
+            },
+          },
+          new: {
+            isAccessible: ({ currentAdmin }) => currentAdmin.role === "admin",
+          },
+        },
       },
     },
     {
@@ -142,6 +165,26 @@ const adminJs = new AdminJS({
         properties: {
           members: { isVisible: { list: true, edit: true, filter: true } },
           createdBy: { isVisible: false },
+        },
+      },
+      actions: {
+        list: {
+          isAccessible: ({ currentAdmin }) => {
+            return currentAdmin && currentAdmin.role !== "student";
+          },
+        },
+        edit: {
+          isAccessible: ({ currentAdmin }) => {
+            return currentAdmin && currentAdmin.role === "admin";
+          },
+        },
+        delete: {
+          isAccessible: ({ currentAdmin }) => {
+            return currentAdmin && currentAdmin.role === "admin";
+          },
+        },
+        new: {
+          isAccessible: ({ currentAdmin }) => currentAdmin.role === "admin",
         },
       },
     },
@@ -184,6 +227,7 @@ const adminJs = new AdminJS({
             isVisible: false,
           },
         },
+        actions: teacherActions,
       },
     },
     courseResourceOptions,
@@ -221,13 +265,7 @@ const adminJs = new AdminJS({
           updatedAt: { list: false, show: true, edit: true },
           creator: { list: false, show: true, edit: true },
         },
-        actions: {
-          list: {
-            isAccessible: ({ currentAdmin }) => {
-              return currentAdmin && currentAdmin.role === "admin";
-            },
-          },
-        },
+        actions: teacherActions,
       },
     },
     {
@@ -238,6 +276,19 @@ const adminJs = new AdminJS({
         },
         properties: {
           creator: { isVisible: false },
+        },
+        actions: teacherActions,
+      },
+    },
+    {
+      resource: Session,
+      options: {
+        navigation: {
+          icon: "Archive",
+        },
+        properties: {
+          token: { isVisible: { list: false, show: true, edit: false } },
+          _id: { isVisible: { list: false, show: true } },
         },
         actions: {
           list: {

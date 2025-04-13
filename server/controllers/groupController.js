@@ -52,7 +52,7 @@ export const getGroups = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit)
       .populate("members", "-password")
-      .populate("createdBy", "-password");
+      .populate("creator", "-password");
 
     res.json({
       groups,
