@@ -180,3 +180,17 @@ export const deleteDocumentById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const uploadDocumentFile = async (req, res) => {
+  try {
+    if (!req.files || !req.files.document) {
+      return res.status(400).json({ message: "Файл документа не выбран" });
+    }
+    const fileBuffer = req.files.document[0].buffer;
+    const uploadResult = await uploadToCloudinary(fileBuffer, "documents");
+    res.json({ secure_url: uploadResult.secure_url });
+  } catch (error) {
+    console.error("Ошибка загрузки документа:", error);
+    res.status(500).json({ error: error.message });
+  }
+};

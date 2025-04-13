@@ -16,6 +16,10 @@
     display: inline-flex;
     align-items: center;
     transition: color 0.2s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
 
     &:hover {
       color: v.$primary-color;

@@ -24,7 +24,9 @@ const courseResourceOptions = {
       icon: "Book",
     },
     properties: {
-      content: { isVisible: { list: true, edit: true, filter: false } },
+      _id: {
+        isVisible: { list: false, show: true, edit: false },
+      },
       creator: {
         isVisible: {
           list: false,
@@ -35,12 +37,19 @@ const courseResourceOptions = {
       },
       "image.url": {
         isVisible: { list: false, show: false, edit: true },
+        components: {
+          edit: Components.ImageUpload,
+          list: Components.ImageUpload,
+        },
+        custom: {
+          folder: "courses",
+        },
       },
       "image.public_id": {
-        isVisible: { list: false, show: false, edit: true },
+        isVisible: { list: false, show: false, edit: false },
       },
       image: {
-        isVisible: { list: true, show: true, edit: true },
+        isVisible: { list: true, show: true, edit: false },
         components: {
           list: Components.ImageCell,
           show: Components.ImageCell,
@@ -103,9 +112,16 @@ const adminJs = new AdminJS({
           password: { isVisible: false },
           "image.url": {
             isVisible: { list: false, show: false, edit: true },
+            components: {
+              edit: Components.ImageUpload,
+              list: Components.ImageUpload,
+            },
+            custom: {
+              folder: "avatars",
+            },
           },
           "image.public_id": {
-            isVisible: { list: false, show: false, edit: true },
+            isVisible: false,
           },
           role: {
             availableValues: [
@@ -136,17 +152,36 @@ const adminJs = new AdminJS({
           icon: "Edit",
         },
         properties: {
-          content: { isVisible: { list: true, edit: true, filter: false } },
-          creator: { isVisible: false },
+          _id: {
+            isVisible: { list: false, show: true, edit: false },
+          },
+          tags: {
+            isVisible: { list: false, show: true, edit: true },
+          },
+          author: {
+            isVisible: {
+              list: false,
+              show: true,
+              edit: true,
+              filter: true,
+            },
+          },
           text: {
             type: "richtext",
             isVisible: { list: false, show: true, edit: true, filter: false },
           },
           "image.url": {
             isVisible: { list: false, show: false, edit: true },
+            components: {
+              edit: Components.ImageUpload,
+              list: Components.ImageUpload,
+            },
+            custom: {
+              folder: "posts",
+            },
           },
           "image.public_id": {
-            isVisible: { list: false, show: false, edit: true },
+            isVisible: false,
           },
         },
       },
@@ -220,7 +255,17 @@ const adminJs = new AdminJS({
           icon: "File",
         },
         properties: {
-          creator: { isVisible: false },
+          creator: { list: false, show: true, edit: true },
+          fileUrl: {
+            isVisible: { list: false, show: false, edit: true },
+            components: {
+              edit: Components.DocumentUpload,
+              list: Components.DocumentUpload,
+            },
+            custom: {
+              folder: "documents",
+            },
+          },
         },
         actions: {
           list: {

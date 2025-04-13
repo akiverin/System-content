@@ -82,7 +82,7 @@ function Course() {
       {error && <p className="error">Ошибка! {error}</p>}
 
       {course && !error && (
-        <>
+        <div className="course__wrapper">
           <div className="course__header">
             <div className="course__info">
               <h1 className="course__title">{course.title}</h1>
@@ -110,7 +110,7 @@ function Course() {
           <ul className="course__list">
             {sortedContent.map((item) => renderContentItem(item))}
           </ul>
-        </>
+        </div>
       )}
     </div>
   );

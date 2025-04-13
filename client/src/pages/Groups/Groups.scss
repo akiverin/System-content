@@ -1,4 +1,9 @@
 .groups {
+  &__wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
   &__list {
     display: flex;
     gap: 0.5rem;

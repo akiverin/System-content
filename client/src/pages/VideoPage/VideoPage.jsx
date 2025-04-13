@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getVideo } from "@/redux/actions/videoActions";
 import { formatDuration, formatDate } from "@/utils/formatters";
@@ -8,6 +8,7 @@ import "./VideoPage.scss";
 const VideoPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { video, loading, error } = useSelector((state) => state.video);
 
   useEffect(() => {
@@ -25,9 +26,9 @@ const VideoPage = () => {
   return (
     <div className="video-page">
       <div className="video-page__back">
-        <Link to="/videos" className="video-page__back-link">
-          &larr; Назад к списку видео
-        </Link>
+        <button className="video-page__back-link" onClick={() => navigate(-1)}>
+          ← Вернуться назад
+        </button>
       </div>
 
       <div className="video-page__player-container">

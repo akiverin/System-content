@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import "./Groups.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllGroups, searchGroups } from "../../redux/actions/groupActions";
-import { Link } from "react-router-dom";
 import Search from "@components/Search";
 import GroupCard from "./GroupCard";
 

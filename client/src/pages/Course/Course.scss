@@ -1,4 +1,10 @@
 .course {
+  &__wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
   &__header {
     display: flex;
     gap: 16px;

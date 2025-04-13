@@ -36,15 +36,15 @@ function Post() {
       {error && <p className="error">Ошибка! {error}</p>}
 
       {post && (
-        <>
+        <div className="post__wrapper">
           <div className="post__header">
             <button className="post__back" onClick={() => navigate(-1)}>
               ← Вернуться назад
             </button>
             <h1 className="post__title">{post.title}</h1>
-            {post.image?.public_id && (
+            {post.image?.url && (
               <img
-                src={post.image}
+                src={post.image.url}
                 alt="Обложка поста"
                 className="post__cover"
               />
@@ -52,7 +52,7 @@ function Post() {
           </div>
           {/* Рендер содержимого, полученного из richtext в формате JSON */}
           {editor && <EditorContent editor={editor} />}
-        </>
+        </div>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import React from "react";
 import "./PostCard.scss";
 import docIcon from "@assets/doc.svg";
 import VideoIcon from "@components/icons/VideoIcon";
+import CourseIcon from "@components/icons/CourseIcon";
 
 function PostCard(postContent) {
   const post = postContent.post;
@@ -21,7 +22,7 @@ function PostCard(postContent) {
           />
         ) : (
           <div className="post-card__image post-card__image--default">
-            <Course height={34} width={34} />
+            <CourseIcon height={34} width={34} />
           </div>
         )}
         <div className="post-card__info">

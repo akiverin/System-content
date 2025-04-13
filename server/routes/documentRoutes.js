@@ -7,6 +7,7 @@ import {
   getDocuments,
   updateDocumentById,
   deleteDocumentById,
+  uploadDocumentFile,
 } from "../controllers/documentController.js";
 import authMiddleware from "../middleware/auth.js";
 
@@ -259,6 +260,12 @@ router.patch(
  *         description: Внутренняя ошибка сервера
  */
 router.delete("/:id", authMiddleware, deleteDocumentById);
+
+router.post(
+  "/upload-document",
+  upload.fields([{ name: "document" }]),
+  uploadDocumentFile
+);
 
 /**
  * @swagger

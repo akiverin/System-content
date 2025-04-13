@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Input from "../Input";
+import Button from "../Button";
 import "./Search.scss";
 
 const Search = ({ onSearch, placeholder }) => {
@@ -17,9 +18,7 @@ const Search = ({ onSearch, placeholder }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <button type="submit" className="search__button">
-        Поиск
-      </button>
+      <Button type="submit">Поиск</Button>
     </form>
   );
 };
