@@ -2,13 +2,15 @@
 import React from "react";
 import "./GroupCard.scss";
 
-const GroupCard = ({ groupName, members = [] }) => {
+const GroupCard = ({ groupName, members = [], self = false }) => {
   const visibleMembers = members.slice(0, 3);
   const extraMembers = members.length > 3 ? members.length - 3 : 0;
 
   return (
     <div className="group-card">
       <h3 className="group-card__name">{groupName}</h3>
+      {self && <p className="group-card__self">Я участник</p>}
+      {!self && <p className="group-card__self">Участники:</p>}
       <div className="group-card__members">
         {visibleMembers.map((member, index) => (
           <div

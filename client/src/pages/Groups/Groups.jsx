@@ -7,6 +7,9 @@ import GroupCard from "./GroupCard";
 
 function Groups() {
   const dispatch = useDispatch();
+  const user = localStorage.getItem("userInfo");
+  const userData = JSON.parse(user);
+  const userId = userData.userId;
 
   useEffect(() => {
     dispatch(getAllGroups());
@@ -25,6 +28,9 @@ function Groups() {
     loading,
     error,
   } = useSelector((state) => state.group);
+
+  console.log(groups);
+
   return (
     <div className="groups">
       <div className="groups__wrapper">
@@ -35,7 +41,13 @@ function Groups() {
         <ul className="groups__list">
           {groups.groups?.map((group) => (
             <li className="groups__item" key={group._id}>
-              <GroupCard groupName={group.name} members={group.members} />
+              <GroupCard
+                groupName={group.name}
+                members={group.members}
+                self={group.members
+                  .map((member) => member._id === userId)
+                  .includes(true)}
+              />
             </li>
           ))}
         </ul>

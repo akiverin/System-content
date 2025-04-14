@@ -8,7 +8,7 @@
   overflow: hidden;
 
   &__name {
-    margin: 0 0 1rem 0;
+    margin: 0;
     font-size: 1.2em;
     color: v.$primary-color;
     font-weight: 600;
@@ -55,5 +55,9 @@
     font-weight: 500;
     color: rgba(0, 0, 0, 0.6);
     text-transform: uppercase;
+  }
+
+  &__self {
+    font-size: 0.8rem;
   }
 }
